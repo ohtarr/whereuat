@@ -13,7 +13,9 @@
         "fruitcake/laravel-cors": "^1.0",
         "guzzlehttp/guzzle": "^6.3",
         "laravel/framework": "^7.0",
-        "laravel/tinker": "^2.0"
+        "laravel/tinker": "^2.0",
+        "ohtarr/service-now-model": "dev-master",
+        "iahunter/php-911enable-egw": "dev-master"
     },
     "require-dev": {
         "facade/ignition": "^2.0",

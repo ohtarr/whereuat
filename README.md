@@ -1,1 +1,3 @@
-WhereUAt is an application designed to manage and synchronize location information.  It is currently being developed to manage E911 services in Microsoft Teams as well as Intrado/West Corporations E911 Gateway.
+WhereUAt is an application designed to manage and synchronize location 
+information.  It is currently being developed to manage E911 services in 
+Microsoft Teams as well as Intrado/West Corporations E911 Gateway...
