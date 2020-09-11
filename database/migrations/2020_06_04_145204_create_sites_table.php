@@ -16,8 +16,8 @@ class CreateSitesTable extends Migration
         Schema::create('sites', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('address_id');
-            $table->integer('contact_id');
+            $table->integer('address_id')->nullable();
+            $table->integer('contact_id')->nullable();
             $table->integer('default_building_id')->nullable();
             $table->string('loc_sys_id')->nullable();
             $table->timestamps();

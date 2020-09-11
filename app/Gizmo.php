@@ -8,6 +8,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use GuzzleHttp\Client as GuzzleHttpClient;
+use App\Azure;
 
 class Gizmo extends Model
 {
@@ -57,7 +58,8 @@ class Gizmo extends Model
             $newarray[] = static::make($item);
         }
         //print_r($newarray);
-        return collect($newarray);
+        $collection = collect($newarray);
+        return $collection;
     }
 
     //Get a single record of this model.
@@ -82,7 +84,12 @@ class Gizmo extends Model
         $response = $apiRequest->getBody()->getContents();
         $array = json_decode($response,true);
         //print_r($array);
-        return static::make($array[0]);
+        if(isset($array[0]))
+        {
+            return static::make($array[0]);
+        } else {
+            return null;
+        }
     }
 
     //Add search querys to this model prior to performing a GET or FIRST.
@@ -152,32 +159,72 @@ class Gizmo extends Model
     //Save model.
     public function save($options = [])
     {
-        print "Key : " . $this->{static::$key} . "\n";
-        if($this->{static::$key})
+/*         print_r($this->saveable);
+
+        foreach($this->toArray() as $attribute => $value)
         {
-            print "Civic Addresses are not editable.\n";
-            return null;
-        }
-        foreach($this->saveable as $param)
-        {
-            foreach($this->toArray() as $attribute => $value)
+            $saveable = 0;
+            foreach($this->saveable as $param)
             {
                 if(strtolower($param) == strtolower($attribute))
                 {
+                    $saveable = 1;
                     $body[$param] = $value;
                     break;
                 }
             }
-        }
+            if($saveable == 0)
+            {
+                print "Attribute " . $attribute . " is NOT modifyable!  Cancelling Request.\n";
+                return null;
+            }
+        } */
 
+        $body = $this->toArray();
+
+        //$azure = new Azure(env('AZURE_AD_TENANT_ID'),env('AZURE_AD_CLIENT_ID'),env('AZURE_AD_CLIENT_SECRET'),'api://' . env('GIZMO_CLIENT_ID') . '/.default');
+        //$token = $azure->getToken();
+        $token = Azure::getToken2();
+        
         $verb = "POST";
         $url = static::$base_url . static::$save_url_suffix;
         $params = [
-            'auth'  =>  [
-            ],
             'headers'   =>  [
                 'Content-Type'  => 'application/json',
                 'Accept'        => 'application/json',
+                'Authorization' => 'Bearer ' . $token,
+            ],
+            'body'  =>  json_encode($body),
+        ];
+
+        $client = new GuzzleHttpClient();
+        //Build a Guzzle POST request
+        $apiRequest = $client->request($verb, $url, $params);
+        $response = $apiRequest->getBody()->getContents();
+        $array = json_decode($response,true);
+        //print_r($array);
+//        $object = self::make($array[0]);
+  //      $object->original = $object->attributes;
+    //    return $object;       
+        /**/
+        return $array;
+    }
+
+    //Delete model.
+    public function delete()
+    {
+        $body = [static::$key => $this->{static::$key}];
+        print_r($body);
+        $azure = new Azure(env('AZURE_AD_TENANT_ID'),env('AZURE_AD_CLIENT_ID'),env('AZURE_AD_CLIENT_SECRET'),'api://' . env('GIZMO_CLIENT_ID') . '/.default');
+        $token = $azure->getToken();
+
+        $verb = "DELETE";
+        $url = static::$base_url . static::$get_url_suffix;
+        $params = [
+            'headers'   =>  [
+                'Content-Type'  => 'application/json',
+                'Accept'        => 'application/json',
+                'Authorization' => 'Bearer ' . $token,
             ],
             'body'  =>  json_encode($body),
         ];
@@ -188,16 +235,6 @@ class Gizmo extends Model
         $response = $apiRequest->getBody()->getContents();
         $array = json_decode($response,true);
         print_r($array);
-//        $object = self::make($array[0]);
-  //      $object->original = $object->attributes;
-    //    return $object;       
-        /**/
-    }
-
-    //Delete model.
-    public function delete()
-    {
-
 
     }
 }

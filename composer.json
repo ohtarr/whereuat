@@ -29,6 +29,12 @@
         "preferred-install": "dist",
         "sort-packages": true
     },
+    "repositories":[
+        {
+            "type": "vcs",
+            "url": "https://github.com/iahunter/php-911enable-egw.git"
+        }
+    ],
     "extra": {
         "laravel": {
             "dont-discover": []

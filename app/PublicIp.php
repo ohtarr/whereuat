@@ -4,11 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use GuzzleHttp\Client as GuzzleHttpClient;
-
+use App\TeamsTrustedIp;
 
 class PublicIp extends Model
 {
-    
+    protected $guarded = [];
+
     public static function all($columns = [])
     {
 
@@ -17,7 +18,11 @@ class PublicIp extends Model
         $response = $client->request("GET", $url);
         //get the body contents and decode json into an array.
         $array = json_decode($response->getBody()->getContents(), true);
-        return $array;
+        foreach($array as $item)
+        {
+            $object = self::make($item);
+            $ips[] = $object;
+        }
+        return collect($ips);
     }
-
 }

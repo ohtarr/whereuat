@@ -5,27 +5,27 @@ namespace App;
 use App\Gizmo;
 use App\TeamsLocation;
 
-class TeamsSwitch extends Gizmo
+class TeamsWap extends Gizmo
 {
     //primary_Key of model.
-    public static $key = "chassisId";
+    public static $key = "bssid";
     //url suffix to access ALL endpoint
-    public static $all_url_suffix = "/api/e911/csonlinelisswitches";
+    public static $all_url_suffix = "/api/e911/csonlineliswaps";
     //url suffix to access GET endpoint
-    public static $get_url_suffix = "/api/e911/csonlinelisswitch";
+    public static $get_url_suffix = "/api/e911/csonlineliswap";
     //url suffix to access FIND endpoint
-    public static $find_url_suffix = "/api/e911/csonlinelisswitch";
+    public static $find_url_suffix = "/api/e911/csonlineliswap";
     //url suffix to access the SAVE endpoint
-    public static $save_url_suffix = "/api/e911/csonlinelisswitch/new";
+    public static $save_url_suffix = "/api/e911/csonlineliswap/new";
 
     //fields that are queryable by this model.
-    public $queryable = [ 
-        "chassisId",
+    public $queryable = [
+        "BSSID",
     ];
 
     //fields that are EDITABLE by this model.
     public $saveable = [
-        "chassisId",
+        "BSSID",
         "Description",
         "LocationId",
     ];
@@ -41,4 +41,4 @@ class TeamsSwitch extends Gizmo
     }
 }
 //Initialize the model with the BASE_URL from env.
-TeamsSwitch::init();
+TeamsWap::init();

@@ -28,6 +28,11 @@ class Building extends Model
         return $this->hasMany('App\Room');
     }
 
+    public function defaultRoom()
+    {
+        return $this->hasOne('App\Room','id','default_room_id');
+    }
+
     public function getAddress()
     {
         $bldgaddress = $this->address;
@@ -67,12 +72,43 @@ class Building extends Model
         {
             $coordinates = $this->lat . "," . $this->lon;
         }
-        $loc = $this->getAddress()->getServiceNowLocation();
+        $loc = $this->site->getServiceNowLocation();
         if($loc)
         {
             $coordinates = $loc->latitude . "," . $loc->longitude;
+            return $coordinates;
         }
-        return $coordinates;
+    }
+
+    public function syncDefaultRoom()
+    {
+        $defaultRoom = $this->defaultRoom;
+        if(!$defaultRoom)
+        {
+            print "DEFAULT ROOM not found, creating new...\n";
+            $defaultRoom = $this->createDefaultRoom();
+            if(!$defaultRoom)
+            {
+                $error = "Failed to get create DEFAULT ROOM!\n";
+                print $error;
+                throw new Exception($error);
+            }
+            print "DEFAULT ROOM with ID {$defaultRoom->id} was created...\n";
+        }
+        print "DEFAULT ROOM with ID {$defaultRoom->id} was found...\n";
+        return $defaultRoom;
+    }
+
+    public function createDefaultRoom()
+    {
+        $room = new Room;
+        $room->name = "DEFAULT_ROOM";
+        $room->description = "Default Room created for site {$this->site->name}";
+        $room->building_id = $this->id;
+        $room->save();
+        $this->default_room_id = $room->id;
+        $this->save();
+        return $room;
     }
 
 }

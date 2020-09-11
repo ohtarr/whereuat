@@ -7,7 +7,7 @@ use App\Gizmo;
 class TeamsSubnet extends Gizmo
 {
     //primary_Key of model.
-    public static $key = "Subnet";
+    public static $key = "subnet";
     //url suffix to access ALL endpoint
     public static $all_url_suffix = "/api/e911/csonlinelissubnets";
     //url suffix to access GET endpoint
@@ -24,9 +24,9 @@ class TeamsSubnet extends Gizmo
 
     //fields that are EDITABLE by this model.
     public $saveable = [
-        "Subnet",
-        "Description",
-        "LocationId",
+        "subnet",
+        "description",
+        "locationId",
     ];
 }
 //Initialize the model with the BASE_URL from env.
