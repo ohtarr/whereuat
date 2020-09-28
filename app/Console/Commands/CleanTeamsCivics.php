@@ -4,7 +4,9 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Address;
-use App\Cache;
+//use App\Cache;
+use App\TeamsCivic;
+use App\TeamsLocation;
 
 class CleanTeamsCivics extends Command
 {
@@ -22,7 +24,7 @@ class CleanTeamsCivics extends Command
      */
     protected $description = 'Clean up unused TEAMS CIVIC ADDRESSES.';
 
-    public $cache;
+    //public $cache;
 
     /**
      * Create a new command instance.
@@ -31,7 +33,7 @@ class CleanTeamsCivics extends Command
      */
     public function __construct()
     {
-        $this->cache = new Cache;
+        //$this->cache = new Cache;
         parent::__construct();
     }
 
@@ -47,8 +49,12 @@ class CleanTeamsCivics extends Command
 
     public function cleanTeamsCivics()
     {
+
         print "Cleaning up un-used TEAMS CIVICS...\n";
-        $civics = $this->cache->getTeamsCivics();
+        //$civics = $this->cache->getTeamsCivics();
+        $civics = TeamsCivic::all();
+        $locations = new TeamsLocation;
+
         foreach($civics as $civic)
         {
             print "**********************************************\n";
@@ -61,8 +67,10 @@ class CleanTeamsCivics extends Command
                 continue;
             }
 
-            $locations = $this->cache->getTeamsNonDefaultLocations($civic->civicAddressId);
-            if($locations->isNotEmpty())
+            //$locations = $this->cache->getTeamsNonDefaultLocations($civic->civicAddressId);
+            $nonDefaultLocs = $locations->cacheGetTeamsNonDefaultLocations($civic->civicAddressId);
+
+            if($nonDefaultLocs->isNotEmpty())
             {
                 print "CIVIC ADDRESS ID {$civic->civicAddressId} has non-default locations attached to it! Skipping...\n";
                 continue;

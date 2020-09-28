@@ -131,7 +131,7 @@ class Site extends Model
             {
                 $error = "Failed to create ADDRESS!\n";
                 print $error;
-                throw new Exception($error);
+                throw new \Exception($error);
             }
             print "ADDRESS with ID {$address->id} was created...\n";
         }
@@ -151,7 +151,7 @@ class Site extends Model
             {
                 $error = "Failed to create CONTACT!\n";
                 print $error;
-                throw new Exception($error);
+                throw new \Exception($error);
             }
             print "CONTACT with ID {$contact->id} was created...\n";
         }
@@ -171,7 +171,7 @@ class Site extends Model
             {
                 $error = "Failed to get create DEFAULT BUILDING!\n";
                 print $error;
-                throw new Exception($error);
+                throw new \Exception($error);
             }
             print "DEFAULT BUILDING with ID {$defaultBuilding->id} was created...\n";
         }
@@ -186,7 +186,7 @@ class Site extends Model
         {
             $error = "Failed to get ServiceNowLocation 911Contact!\n";
             print $error;
-            throw new Exception($error);
+            throw new \Exception($error);
             return null;
         }
         $contact = new Contact;

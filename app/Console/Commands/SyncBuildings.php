@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use App\Building;
 
 class SyncBuildings extends Command
@@ -43,23 +44,32 @@ class SyncBuildings extends Command
 
     public function syncAllBuildings()
     {
-        print "Syncing All BUILDINGS\n";
-        
+
+        $msg = "********************* BEGIN " . get_class() . " *****************************\n";
+        print $msg;
+        Log::info($msg);
         foreach(Building::all() as $building)
         {
-            print "**********************************************\n";
-            print "Syncing BUILDING ID {$building->id} for SITE {$building->site->name}...\n";
+            $msg = get_class() . "::" . __FUNCTION__ . " - BUILDING {$building->id} - Syncing BUILDING ID {$building->id} for SITE {$building->site->name}...\n";
+            print $msg;
+            Log::info($msg);
 
             $defaultRoom = $building->syncDefaultRoom();
             if(!$defaultRoom)
             {
-                print "Unable to obtain/create DEFAULT ROOM for BUILDING ID {$building->id} at site {$building->site->name}, skipping site...\n";
+                $msg = get_class() . "::" . __FUNCTION__ . " - BUILDING {$building->id} - Unable to obtain/create DEFAULT ROOM for BUILDING ID {$building->id} at site {$building->site->name}, skipping site...\n";
+                print $msg;
+                Log::info($msg);
+
                 continue;
             }
-
-            print "Completed Sync of BUILDING ID {$building->id} for SITE {$building->site->name}...\n";
-            print "**********************************************\n";
+            $msg = "BUILDING {$building->id} - Completed Sync of BUILDING ID {$building->id} for SITE {$building->site->name}...\n";
+            print $msg;
+            Log::info($msg);
         }
+        $msg = "********************* END " . get_class() . " *********************\n";
+        print $msg;
+        Log::info($msg);
     }
 
 }

@@ -25,6 +25,8 @@ class Gizmo extends Model
     //url suffix to access the SAVE endpoint
     public static $save_url_suffix = "";
 
+    public $cache;
+
     //search parameters used when performing a GET
     public $where = [];
 
@@ -237,4 +239,29 @@ class Gizmo extends Model
         print_r($array);
 
     }
+
+    public function cacheAll($force = false)
+    {
+        if($force || !$this->cache)
+        {
+            $this->cache = $this->all();
+        }
+        return $this->cache;
+    }
+
+    public function cacheFind($id)
+    {
+        return $this->cacheAll()->where(static::$key,$id)->first();
+    }
+
+    public function cacheGet()
+    {
+        $filtered = $this->cacheAll();
+        foreach($this->where as $key => $value)
+        {
+            $filtered = $filtered->where($key, $value);
+        }
+        return $filtered;
+    }
+
 }

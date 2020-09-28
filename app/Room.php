@@ -102,7 +102,7 @@ class Room extends Model
         }
         $teamsloc = new TeamsLocation;
         $teamsloc->civicAddressId = $civicId;
-        $teamsloc->location = $this->building->name . " - " . $this->name;
+        $teamsloc->location = $this->building->site->name . " - " . $this->building->name . " - " . $this->name;
         $teamsLocationId = $teamsloc->save();
         $this->teams_location_id = $teamsLocationId;
         $this->save();

@@ -10,6 +10,8 @@ class PublicIp extends Model
 {
     protected $guarded = [];
 
+    public $cache;
+
     public static function all($columns = [])
     {
 
@@ -25,4 +27,14 @@ class PublicIp extends Model
         }
         return collect($ips);
     }
+
+    public function cacheAll($force = false)
+    {
+        if($force || !$this->cache)
+        {
+            $this->cache = $this->all();
+        }
+        return $this->cache;
+    }
+
 }

@@ -48,5 +48,19 @@ class TeamsLocation extends Gizmo
         return Room::where('teams_location_id',$this->locationId)->first();
     }
 
+    public function cacheGetTeamsLocations($civicAddressId)
+    {
+        return $this->cacheAll()->where('civicAddressId', $civicAddressId);
+    }
+
+    public function cacheGetTeamsDefaultLocation($civicAddressId)
+    {
+        return $this->cacheAll()->where('civicAddressId',$civicAddressId)->whereNull('location')->first();
+    }
+
+    public function cacheGetTeamsNonDefaultLocations($civicAddressId)
+    {
+        return $this->cacheAll()->where('civicAddressId',$civicAddressId)->whereNotNull('location');
+    }
 }
 TeamsLocation::init();

@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use App\Room;
 
 class Building extends Model
@@ -82,6 +83,9 @@ class Building extends Model
 
     public function syncDefaultRoom()
     {
+        $msg = get_class() . "::" . __FUNCTION__ . "\n";
+        print $msg;
+        Log::info($msg);
         $defaultRoom = $this->defaultRoom;
         if(!$defaultRoom)
         {
@@ -89,9 +93,7 @@ class Building extends Model
             $defaultRoom = $this->createDefaultRoom();
             if(!$defaultRoom)
             {
-                $error = "Failed to get create DEFAULT ROOM!\n";
-                print $error;
-                throw new Exception($error);
+                throw new \Exception("Failed to create DEFAULT ROOM!");
             }
             print "DEFAULT ROOM with ID {$defaultRoom->id} was created...\n";
         }

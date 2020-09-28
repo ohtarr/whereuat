@@ -44,9 +44,10 @@ class SyncAll extends Command
         $this->call('whereuat:SyncAddresses');
         $this->call('whereuat:SyncBuildings');
         $this->call('whereuat:SyncRooms');
-
         $this->call('whereuat:SyncPublicIps');
         $this->call('whereuat:SyncSwitches');
+        $this->call('whereuat:SyncBssids');
+        $this->call('whereuat:SyncSubnets');
     }
 
 

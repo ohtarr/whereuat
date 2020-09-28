@@ -12,6 +12,8 @@ class DeviceSwitch extends Model
 {
     protected $guarded =[];
 
+    public $cache;
+
     public static function all($columns = [])
     {
         $url = env('SWITCHES_URL');
@@ -28,6 +30,15 @@ class DeviceSwitch extends Model
             }
         }
         return collect($switches);
+    }
+
+    public function cacheAll($force = false)
+    {
+        if($force || !$this->cache)
+        {
+            $this->cache = $this->all();
+        }
+        return $this->cache;
     }
 
     public function getSiteCode()

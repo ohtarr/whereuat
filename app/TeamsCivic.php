@@ -25,7 +25,7 @@ class TeamsCivic extends Gizmo
     //fields that are queryable by this model.
     public $queryable = [ 
         "CivicAddressId",
-        "City",
+        "city",
     ];
 
     //fields that are EDITABLE by this model.
@@ -111,7 +111,8 @@ class TeamsCivic extends Gizmo
     {
         if($locations = $this->getTeamsLocations())
         {
-            return $locations->whereNull('location')->first();
+            //return $locations->whereNull('location')->first();
+            return $locations->where('locationId',$this->defaultLocationId)->first();
         }
         return null;
     }
@@ -120,7 +121,8 @@ class TeamsCivic extends Gizmo
     {
         if($locations = $this->getTeamsLocations())
         {
-            return $locations->whereNotNull('location');
+            //return $locations->whereNotNull('location');
+            return $locations->where('locationId',"!=",$this->defaultLocationId);
         }
         return null;
     }

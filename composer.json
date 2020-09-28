@@ -15,7 +15,8 @@
         "laravel/framework": "^7.0",
         "laravel/tinker": "^2.0",
         "ohtarr/service-now-model": "dev-master",
-        "iahunter/php-911enable-egw": "dev-master"
+        "iahunter/php-911enable-egw": "dev-master",
+        "markrogoyski/ipv4-subnet-calculator": "3.*"
     },
     "require-dev": {
         "facade/ignition": "^2.0",

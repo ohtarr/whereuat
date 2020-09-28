@@ -3,9 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\DeviceSwitch;
-use App\TeamsSwitch;
-use App\Cache;
+use Illuminate\Support\Facades\Log;
+use App\TeamsWap;
+use App\Bssid;
 
 class SyncBssids extends Command
 {
@@ -23,8 +23,6 @@ class SyncBssids extends Command
      */
     protected $description = 'Synchronize BSSIDS to TEAMS WAPs';
 
-    public $cache;
-
     /**
      * Create a new command instance.
      *
@@ -32,7 +30,6 @@ class SyncBssids extends Command
      */
     public function __construct()
     {
-        $this->cache = new Cache;
         parent::__construct();
     }
 
@@ -48,29 +45,56 @@ class SyncBssids extends Command
 
     public function syncTeamsWaps()
     {
-        foreach($this->cache->getBssids() as $bssid)
-        {
-            print "**********************************************\n";
-            print "Syncing Bssid {$bssid->bssid} ...\n";
+        $teamsWaps = new TeamsWap;
+        $bssids = new Bssid;
+        $msg = "********************* BEGIN " . get_class() . " *****************************\n";
+        print $msg;
+        Log::info($msg);
 
-            $teamsWap = $this->cache->getTeamsWap($bssid);
+        foreach($bssids->cacheAll() as $bssid)
+        {
+            $msg = "BSSID {$bssid->bssid} - Syncing BSSID ID {$bssid->bssid}...\n";
+            print $msg;
+            Log::info($msg);
+
+            $teamsWap = $teamsWaps->cacheFind($bssid->bssid);
             $room = $bssid->getRoom();
-            //$locationId = $room->teams_location_id;
-            //$roomLocation = $this->cache->getTeamsLocation($locationId);
 
             if($teamsWap)
             {
+                $msg = "BSSID {$bssid->bssid} - TEAMS WAP Exists...\n";
+                print $msg;
+                Log::info($msg);
                 if(!$bssid->validateTeamsWap($teamsWap))
                 {
-                    print "BSSID and TEAMS WAP do not match...\n";
-                    $bssid->createOrUpdateTeamsBssid();
+                    $msg = "BSSID {$bssid->bssid} - BSSID and TEAMS WAP do not match...\n";
+                    print $msg;
+                    Log::info($msg);
+                    try{
+                        $bssid->createOrUpdateTeamsBssid();
+                    } catch(\Exception $e) {
+                        $msg = $e->getMessage() ."\n";
+                        print $msg;
+                        Log::info($msg);
+                    }
                 }
 
             } else {
-                print "TEAM WAP does not exist, creating...\n";
-                $bssid->createOrUpdateTeamsBssid();
+                $msg = "BSSID {$bssid->bssid} - TEAM WAP does not exist, creating...\n";
+                print $msg;
+                Log::info($msg);
+                try{
+                    $bssid->createOrUpdateTeamsBssid();
+                } catch(\Exception $e) {
+                    $msg = $e->getMessage() . "\n";
+                    print $msg;
+                    Log::info($msg);
+                }
             }
         }
+        $msg = "********************* END " . get_class() . " *********************\n";
+        print $msg;
+        Log::info($msg);
     }
   
 }

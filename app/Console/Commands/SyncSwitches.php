@@ -5,7 +5,9 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\DeviceSwitch;
 use App\TeamsSwitch;
-use App\Cache;
+use App\TeamsLocation;
+//use App\Cache;
+
 
 class SyncSwitches extends Command
 {
@@ -23,7 +25,7 @@ class SyncSwitches extends Command
      */
     protected $description = 'Synchronize switches to Teams Switches';
 
-    public $cache;
+    //public $cache;
     /**
      * Create a new command instance.
      *
@@ -31,7 +33,7 @@ class SyncSwitches extends Command
      */
     public function __construct()
     {
-        $this->cache = new Cache;
+        //$this->cache = new Cache;
         parent::__construct();
     }
 
@@ -47,7 +49,11 @@ class SyncSwitches extends Command
 
     public function syncTeamsSwitches()
     {
-        foreach($this->cache->getSwitches() as $switch)
+        $teamsLocations = new TeamsLocation;
+        $teamsSwitches = new TeamsSwitch;
+        $switches = DeviceSwitch::all();
+
+        foreach($switches as $switch)
         {
             print "**********************************************\n";
             print "Syncing Switch {$switch->name} ...\n";
@@ -59,22 +65,24 @@ class SyncSwitches extends Command
                 continue;
             }
 
-            $location = $this->cache->getTeamsLocation($room->teams_location_id);
+            //$location = $this->cache->getTeamsLocation($room->teams_location_id);
+            $location = $teamsLocations->cacheFind($room->teams_location_id);
             if(!$location)
             {
                 print "Unable to find TEAMS LOCATION... Skipping...\n";
                 continue;
             }
             
-            $teamsSwitch = $this->cache->getTeamsSwitch($switch->mac);
-
+            //$teamsSwitch = $this->cache->getTeamsSwitch($switch->mac);
+            $teamsSwitch = $teamsSwitches->cacheFind($switch->mac);
             if(!$teamsSwitch)
             {
                 print "SWITCH does not exist...CREATING TEAMS SWITCH!!\n";
                 $teamsSwitch = $switch->setTeamsSwitchFromTeamsLocationId($location->locationId);
             } else {
                 print "SWITCH already exists...Checking TEAMS LOCATION...\n";
-                $teamsSwitchLocation = $this->cache->getTeamsLocation($teamsSwitch->locationId);
+                //$teamsSwitchLocation = $this->cache->getTeamsLocation($teamsSwitch->locationId);
+                $teamsSwitchLocation = $teamsLocations->cacheFind($teamsSwitch->locationId);
                 if($teamsSwitchLocation)
                 {
                     print "TEAMS SWITCH location found....\n";

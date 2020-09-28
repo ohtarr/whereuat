@@ -12,6 +12,8 @@ class BssId extends Model
 {
     protected $guarded =[];
 
+    public $cache;
+
     public $fieldMapping = [
         'bssid' => 'bssid',
         'name'  => 'description',
@@ -44,6 +46,20 @@ class BssId extends Model
             }
         }
         return collect($bssids);
+    }
+
+    public function cacheAll($force = false)
+    {
+        if($force || !$this->cache)
+        {
+            $this->cache = $this->all();
+        }
+        return $this->cache;
+    }
+
+    public function cacheFind($id)
+    {
+        return $this->cacheAll()->where('bssid',$id)->first();
     }
 
     public function getSiteCode()
@@ -106,10 +122,10 @@ class BssId extends Model
                 $wap->locationId = $teamsLocationId;
                 $wap->save();
             } else {
-                print "Unable to find TEAMS LOCATION, skipping...\n";
+                throw new \Exception("Unable to find TEAMS LOCATION");
             }
         } else {
-            print "Unable to find ROOM, skipping...\n";
+            throw new \Exception("Unable to find ROOM");
         }
     }
 
@@ -131,7 +147,7 @@ class BssId extends Model
         }
         foreach($this->fieldMapping as $bssidKey => $teamsKey)
         {
-            if($this->bssidKey != $teamsWap->$teamsKey)
+            if($this->$bssidKey != $teamsWap->$teamsKey)
             {
                 $matches = false;
             }

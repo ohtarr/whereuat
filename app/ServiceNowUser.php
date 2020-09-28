@@ -13,11 +13,22 @@ class ServiceNowUser extends ServiceNowModel
 
 	public $table = "sys_user";
 
+    public $cache;
+
     public function __construct(array $attributes = [])
     {
         $this->snowbaseurl = env('SNOWBASEURL'); //https://mycompany.service-now.com/api/now/v1/table
         $this->snowusername = env("SNOWUSERNAME");
         $this->snowpassword = env("SNOWPASSWORD");
 		parent::__construct($attributes);
+    }
+
+    public function cacheAll($force = false)
+    {
+        if($force || !$this->cache)
+        {
+            $this->cache = $this->all();
+        }
+        return $this->cache;
     }
 }

@@ -4,7 +4,9 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Room;
-use App\Cache;
+//use App\Cache;
+use App\TeamsCivic;
+use App\TeamsLocation;
 
 class SyncRooms extends Command
 {
@@ -22,7 +24,7 @@ class SyncRooms extends Command
      */
     protected $description = 'Create DEFAULT ROOMs and create/map-to TEAMS LOCATIONS.';
 
-    public $cache;
+    //public $cache;
 
     /**
      * Create a new command instance.
@@ -31,7 +33,7 @@ class SyncRooms extends Command
      */
     public function __construct()
     {
-        $this->cache = new Cache;
+        //$this->cache = new Cache;
         parent::__construct();
     }
 
@@ -127,13 +129,16 @@ class SyncRooms extends Command
     public function syncAllRooms()
     {
         print "Syncing All ROOMS\n";
-        
+        $teamsCivics = new TeamsCivic;
+        $teamsLocations = new TeamsLocation;
+
         foreach(Room::all() as $room)
         {
             print "**********************************************\n";
             print "Syncing ROOM ID {$room->id} for SITE {$room->building->site->name}...\n";
 
-            $civic = $this->cache->getTeamsCivic($room->getAddress()->teams_civic_id);
+            //$civic = $this->cache->getTeamsCivic($room->getAddress()->teams_civic_id);
+            $civic = $teamsCivics->cacheFind($room->getAddress()->teams_civic_id);
             if(!$civic)
             {
                 $error = "Failed to obtain TEAMS CIVIC from ADDRESS... Skipping ROOM!\n";
@@ -144,7 +149,8 @@ class SyncRooms extends Command
             if($room->teams_location_id)
             {
                 print "ROOM ID {$room->id} is already set to TEAMS LOCATION ID {$room->teams_location_id}...\n";
-                $location = $this->cache->getTeamsLocation($room->teams_location_id);
+                //$location = $this->cache->getTeamsLocation($room->teams_location_id);
+                $location = $teamsLocations->cacheFind($room->teams_location_id);
                 if($location)
                 {
                     if($location->civicAddressId == $civic->civicAddressId)

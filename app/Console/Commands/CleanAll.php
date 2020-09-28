@@ -41,6 +41,10 @@ class CleanAll extends Command
     {
         $this->call('whereuat:CleanTeamsLocations');
         $this->call('whereuat:CleanTeamsCivics');
+        $this->call('whereuat:CleanTeamsSubnets');
+        $this->call('whereuat:CleanTeamsSwitches');
+        $this->call('whereuat:CleanTeamsWaps');
+        $this->call('whereuat:CleanTeamsTrustedIps');
     }
 
 

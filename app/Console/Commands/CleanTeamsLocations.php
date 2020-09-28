@@ -4,7 +4,8 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Room;
-use App\Cache;
+use App\TeamsLocation;
+use App\TeamsCivic;
 
 class CleanTeamsLocations extends Command
 {
@@ -22,8 +23,6 @@ class CleanTeamsLocations extends Command
      */
     protected $description = 'Clean up unused TEAMS LOCATIONS.';
 
-    public $cache;
-
     /**
      * Create a new command instance.
      *
@@ -31,7 +30,6 @@ class CleanTeamsLocations extends Command
      */
     public function __construct()
     {
-        $this->cache = new Cache;
         parent::__construct();
     }
 
@@ -48,30 +46,35 @@ class CleanTeamsLocations extends Command
     public function cleanTeamsLocations()
     {
         print "Cleaning up un-used TEAMS LOCATIONS...\n";
-        $locations = $this->cache->getTeamsLocations();
-        foreach($locations as $location)
+        $teamsLocations = TeamsLocation::all();
+        $civics = TeamsCivic::all();
+        foreach($civics as $civic)
         {
-            print "**********************************************\n";
-            print "Checking TEAMS LOCATION ID {$location->locationId}...\n";
-            if(!$location->location)
+            $nonDefaultTeamsLocations = $teamsLocations->where('civicAddressId',$civic->civicAddressId)->where('locationId',"!=",$civic->defaultLocationId);
+            foreach($nonDefaultTeamsLocations as $location)
             {
-                print "Default location is not editable! Skipping...\n";
-                continue;
-            }
-            $room = Room::where('teams_location_id',$location->locationId)->first();
-            if($room)
-            {
-                print "Found ROOM ID {$room->id}... skipping!\n";
-                continue;
-            } else {
-                print "No ROOM found, removing TEAMS LOCATION ID {$location->locationId}...\n";
-                try{
-                    $location->delete();
-                } catch(\Exception $e) {
-                    print $e->getMessage();
+                print "**********************************************\n";
+                print "Checking TEAMS LOCATION ID {$location->locationId}...\n";
+                $room = Room::where('teams_location_id',$location->locationId)->first();
+                if($room)
+                {
+                    print "Found ROOM ID {$room->id}... skipping!\n";
                     continue;
+                } else {
+                    print "No ROOM found, removing TEAMS LOCATION ID {$location->locationId}...\n";
+                    try{
+                        $location->delete();
+                    } catch(\Exception $e) {
+                        print $e->getMessage();
+                        continue;
+                    }
                 }
-            }
+            } 
+
         }
+
+
+
+        
     }
 }

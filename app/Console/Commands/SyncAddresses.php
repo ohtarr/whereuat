@@ -3,8 +3,10 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use App\Address;
-use App\Cache;
+//use App\Cache;
+use App\TeamsCivic;
 
 class SyncAddresses extends Command
 {
@@ -22,7 +24,7 @@ class SyncAddresses extends Command
      */
     protected $description = 'Get all ADDRESSES and create/sync TEAMS CIVICS.';
 
-    public $cache;
+    //public $cache;
 
     /**
      * Create a new command instance.
@@ -31,7 +33,7 @@ class SyncAddresses extends Command
      */
     public function __construct()
     {
-        $this->cache = new Cache;
+        //$this->cache = new Cache;
         parent::__construct();
     }
 
@@ -42,45 +44,66 @@ class SyncAddresses extends Command
      */
     public function handle()
     {
+
         $this->SyncAllAddresses();
     }
 
     public function SyncAllAddresses()
     {
-        print "Syncing All ADDRESSES\n";
+        $msg = "********************* BEGIN " . get_class() . " *****************************\n";
+        print $msg;
+        Log::info($msg);
+        
         $addresses = Address::all();
+        $civics = new TeamsCivic;
+        $civics->cacheAll();
+
         foreach($addresses as $address)
         {
             $create = false;
             //SYNC ADDRESS = Create TEAMS CIVIC if missing.
-            print "**********************************************\n";
-            print "Syncing ADDRESS ID {$address->id} for site {$address->getSite()->name}...\n";
+            $msg = "ADDRESS {$address->id} - Syncing ADDRESS ID {$address->id} for site {$address->getSite()->name}...\n";
+            print $msg;
+            Log::info($msg);
             if($address->teams_civic_id)
             {
-                print "Found teams_civic_id...\n";
+                $msg =  "ADDRESS {$address->id} - Teams Civic: {$address->teams_civic_id} is already assigned...\n";
+                print $msg;
+                Log::info($msg);
                 try{
-                    $civic = $this->cache->getTeamsCivic($address->teams_civic_id);
+                    //$civic = $this->cache->getTeamsCivic($address->teams_civic_id);
+                    $civic = $civics->cacheFind($address->teams_civic_id);
                 } catch(\Exception $e) {
-                    print $e->getMessage();
+                    $msg = $e->getMessage();
+                    print $msg;
+                    Log::info($msg);
                     continue;
                 }
                 if($civic)
                 {
-                    print "Found TEAMS CIVIC with ID {$civic->civicAddressId}...\n";
+                    $msg = "ADDRESS {$address->id} - TEAMS CIVIC ID {$civic->civicAddressId} exists in Teams...\n";
+                    print $msg;
+                    Log::info($msg);
                     //CHECK ADDRESS
                     $match = $address->compareTeamsCivic($civic);
                     if(!$match)
                     {
-                        print "ADDRESS and TEAMS CIVIC do NOT match!  Creating new TEAMS CIVIC\n";
+                        $msg = "ADDRESS {$address->id} - ADDRESS and TEAMS CIVIC do NOT match!  Creating new TEAMS CIVIC\n";
+                        print $msg;
+                        Log::info($msg);
                         $create = true;
                     }
                 } else {
-                    print "Unable to find existing TEAMS CIVIC, creating new TEAMS CIVIC...\n";
+                    $msg = "ADDRESS {$address->id} - Unable to find existing TEAMS CIVIC, creating new TEAMS CIVIC...\n";
+                    print $msg;
+                    Log::info($msg);
                     $create = true;
                 }
                 
             } else {
-                print "Unable to find existing TEAMS CIVIC ID, creating a new TEAMS CIVIC...\n";
+                $msg = "ADDRESS {$address->id} - Unable to find existing TEAMS CIVIC ID, creating a new TEAMS CIVIC...\n";
+                print $msg;
+                Log::info($msg);
                 $create = true;
             }
             if($create == true)
@@ -88,48 +111,18 @@ class SyncAddresses extends Command
                 try{
                     $civic = $address->createTeamsCivic();
                 } catch(\Exception $e) {
-                    print $e->getMessage();
-                    continue;
+                    $msg = $e->getMessage();
+                    print $msg;
+                    Log::info($msg);
                 }
             }
-            print "Completed Sync of ADDRESS ID {$address->id} for site {$address->getSite()->name} ...\n";
-            print "**********************************************\n";
+            $msg = "ADDRESS {$address->id} - Completed Sync of ADDRESS ID {$address->id} for site {$address->getSite()->name} ...\n";
+            print $msg;
+            Log::info($msg);
         }
+        $msg = "********************* END " . get_class() . " *********************\n";
+        print $msg;
+        Log::info($msg);
     }
-
-/*     public function compareCivicWithServiceNowLocation($civic,$snowloc)
-    {
-        $match = true;
-        if(strtoupper($civic->houseNumber) != strtoupper($snowloc->u_street_number))
-        {
-            $match = false;
-        }
-        if(strtoupper($civic->preDirectional) != strtoupper($snowloc->u_street_predirectional))
-        {
-            $match = false;
-        }
-        if(strtoupper($civic->streetName) != strtoupper($snowloc->u_street_name))
-        {
-            $match = false;
-        }
-        if(strtoupper($civic->streetSuffix) != strtoupper($snowloc->u_street_suffix))
-        {
-            $match = false;
-        }
-        if(strtoupper($civic->postDirectional) != strtoupper($snowloc->u_street_postdirectional))
-        {
-            $match = false;
-        }
-        if(strtoupper($civic->city) != strtoupper($snowloc->city))
-        {
-            $match = false;
-        }
-        if(strtoupper($civic->postalCode) != strtoupper($snowloc->zip))
-        {
-            $match = false;
-        }
-        return $match;
-    } */
-
 
 }

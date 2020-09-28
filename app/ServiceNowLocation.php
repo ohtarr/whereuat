@@ -17,7 +17,9 @@ class ServiceNowLocation extends ServiceNowModel
 {
 	protected $guarded = [];
 
-	public $table = "cmn_location";
+    public $table = "cmn_location";
+
+    public $cache;
 
     public function __construct(array $attributes = [])
     {
@@ -146,6 +148,15 @@ class ServiceNowLocation extends ServiceNowModel
         } else {
             return false;
         }
+    }
+
+    public function cacheAll($force = false)
+    {
+        if($force || !$this->cache)
+        {
+            $this->cache = $this->all();
+        }
+        return $this->cache;
     }
 
 }
