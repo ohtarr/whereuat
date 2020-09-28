@@ -8,7 +8,7 @@ use App\Site;
 use App\Room;
 use App\TeamsWap;
 
-class BssId extends Model
+class Bssid extends Model
 {
     protected $guarded =[];
 
