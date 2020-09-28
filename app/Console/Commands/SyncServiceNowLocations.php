@@ -69,17 +69,9 @@ class SyncServiceNowLocations extends Command
 
     public function syncAllServiceNowLocations()
     {
-        $count = 0;
-        $maxcount = 20;
         print "Syncing All Service Now Locations\n";
-        
         foreach($this->getServiceNowLocations() as $snowloc)
         {
-            $count++;
-            if($count > $maxcount)
-            {
-                break;
-            }
             //SYNC SNOWLOC = Create SITE if missing.
             print "**********************************************\n";
             print "Syncing Location " . $snowloc->name . "...\n";
@@ -91,13 +83,6 @@ class SyncServiceNowLocations extends Command
                 print $e;
                 continue;
             }
-/*             try{
-                $address = $site->syncAddress();
-            } catch(\Exception $e) {
-                print $e;
-                continue;
-            } */
-
             print "Completed Sync of location {$snowloc->name} ...\n";
             print "**********************************************\n";
 
