@@ -55,7 +55,8 @@ class SyncPublicIps extends Command
                 print "IP {$publicip->real_ip} does NOT exist, adding!\n";
                 $trusted = new TeamsTrustedIp;
                 //$trusted->identity = $publicip->real_ip;
-                $trusted->maskBits = "32";
+                //$trusted->maskBits = "32";
+                $trusted->maskBits = $publicip->cidr;
                 $trusted->description = strtoupper(substr($publicip->device_name,0,8));
                 $trusted->ipAddress = $publicip->real_ip;
                 $trusted->save();

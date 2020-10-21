@@ -252,6 +252,7 @@ class Gizmo extends Model
     public function cacheFind($id)
     {
         return $this->cacheAll()->where(static::$key,$id)->first();
+        //return $this->cacheAll()->where($this->key,$id)->first();
     }
 
     public function cacheGet()

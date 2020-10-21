@@ -68,12 +68,13 @@ class SyncSites extends Command
                 print "Unable to obtain/create DEFAULT BUILDING for site {$site->name}, skipping site...\n";
                 continue;
             }
-            $contact = $site->syncContact();
-            if(!$contact)
-            {
-                print "Unable to obtain CONTACT for site {$site->name}, skipping site...\n";
+            try{
+                $contact = $site->syncContact();
+            } catch(\Exception $e) {
+                print $e->getMessage();
+                //print "Unable to obtain CONTACT for site {$site->name}, skipping site...\n";
                 continue;
-            }
+            }            
 
             print "Completed Sync of SITE {$site->name} ...\n";
             print "**********************************************\n";

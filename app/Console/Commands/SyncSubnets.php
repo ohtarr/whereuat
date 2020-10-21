@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\Dhcp;
 use App\Site;
 use App\TeamsSubnet;
+use App\TeamsLocation;
 
 class SyncSubnets extends Command
 {
@@ -43,6 +44,7 @@ class SyncSubnets extends Command
         $scopes = new Dhcp;
         $sites = Site::all();
         $teamsSubnets = new TeamsSubnet;
+        $teamsLocations = new TeamsLocation;
 
         foreach($scopes->cacheAll() as $scope)
         {
@@ -59,13 +61,31 @@ class SyncSubnets extends Command
             if($sitematch)
             {
                 print "Found a matching site: {$sitematch->name}.\n";
-                $teamsSubnet = $teamsSubnets->cacheAll()->where('subnet',$scope->scopeId)->first();
+                $teamsSubnet = $teamsSubnets->cacheAll()->where('subnet',$scope->scopeID)->first();
                 if($teamsSubnet)
                 {
-                    print "Found an existing Teams Subnet!  Skipping...\n";
+                    print "Found an existing Teams Subnet!  Checking TEAMS LOCATION...\n";
+                    $teamsLocation = $teamsLocations->cacheAll()->where('locationId',$teamsSubnet->locationId)->first();
+                    if($teamsLocation)
+                    {
+                        print "TEAMS LOCATION found and valid... skipping...\n";
+                    } else {
+                        print "No valid TEAMS LOCATION found!  Creating/Updating TEAMS SUBNET.\n";
+                        try{
+                            $teamsSubnet = $scope->createTeamsSubnet();
+                        } catch(\Exception $e) {
+                            print $e->getMessage();
+                            continue;
+                        }     
+                    }
                 } else {
                     print "No Teams Subnet found!  Adding...\n";
-                    $teamsSubnet = $scope->createTeamsSubnet();
+                    try{
+                        $teamsSubnet = $scope->createTeamsSubnet();
+                    } catch(\Exception $e) {
+                        print $e->getMessage();
+                        continue;
+                    }     
                 }
             }
 

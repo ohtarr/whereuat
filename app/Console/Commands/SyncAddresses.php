@@ -62,7 +62,7 @@ class SyncAddresses extends Command
         {
             $create = false;
             //SYNC ADDRESS = Create TEAMS CIVIC if missing.
-            $msg = "ADDRESS {$address->id} - Syncing ADDRESS ID {$address->id} for site {$address->getSite()->name}...\n";
+            $msg = "ADDRESS {$address->id} - Syncing ADDRESS ID {$address->id}...\n";
             print $msg;
             Log::info($msg);
             if($address->teams_civic_id)
@@ -116,7 +116,7 @@ class SyncAddresses extends Command
                     Log::info($msg);
                 }
             }
-            $msg = "ADDRESS {$address->id} - Completed Sync of ADDRESS ID {$address->id} for site {$address->getSite()->name} ...\n";
+            $msg = "ADDRESS {$address->id} - Completed Sync of ADDRESS ID {$address->id}...\n";
             print $msg;
             Log::info($msg);
         }
