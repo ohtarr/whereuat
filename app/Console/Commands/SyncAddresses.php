@@ -60,6 +60,7 @@ class SyncAddresses extends Command
 
         foreach($addresses as $address)
         {
+            unset($civic);
             $create = false;
             //SYNC ADDRESS = Create TEAMS CIVIC if missing.
             $msg = "ADDRESS {$address->id} - Syncing ADDRESS ID {$address->id}...\n";
@@ -74,9 +75,9 @@ class SyncAddresses extends Command
                     //$civic = $this->cache->getTeamsCivic($address->teams_civic_id);
                     $civic = $civics->cacheFind($address->teams_civic_id);
                 } catch(\Exception $e) {
-                    $msg = $e->getMessage();
+                    $msg = "ADDRESS {$address->id} - " . $e->getMessage();
                     print $msg;
-                    Log::info($msg);
+                    Log::error($msg);
                     continue;
                 }
                 if($civic)
@@ -92,6 +93,10 @@ class SyncAddresses extends Command
                         print $msg;
                         Log::info($msg);
                         $create = true;
+                    } else {
+                        $msg = "ADDRESS {$address->id} - ADDRESS and TEAMS CIVIC match!\n";
+                        print $msg;
+                        Log::info($msg);
                     }
                 } else {
                     $msg = "ADDRESS {$address->id} - Unable to find existing TEAMS CIVIC, creating new TEAMS CIVIC...\n";
@@ -101,7 +106,7 @@ class SyncAddresses extends Command
                 }
                 
             } else {
-                $msg = "ADDRESS {$address->id} - Unable to find existing TEAMS CIVIC ID, creating a new TEAMS CIVIC...\n";
+                $msg = "ADDRESS {$address->id} - Unable to find an assigned TEAMS CIVIC ID, creating a new TEAMS CIVIC...\n";
                 print $msg;
                 Log::info($msg);
                 $create = true;
@@ -109,11 +114,21 @@ class SyncAddresses extends Command
             if($create == true)
             {
                 try{
-                    $civic = $address->createTeamsCivic();
+                    $newcivic = $address->createTeamsCivic();
                 } catch(\Exception $e) {
-                    $msg = $e->getMessage();
+                    $msg = "ADDRESS {$address->id} - " . $e->getMessage() . "\n";
+                    print $msg;
+                    Log::error($msg);
+                }
+                if(isset($newcivic))
+                {
+                    $msg = "ADDRESS {$address->id} - Created TEAMS CIVIC with ID of {$newcivic->civicAddressId}.\n";
                     print $msg;
                     Log::info($msg);
+                } else {
+                    $msg = "ADDRESS {$address->id} - Failed to create TEAMS CIVIC!  Skipping ADDRESS...\n";
+                    print $msg;
+                    Log::error($msg);
                 }
             }
             $msg = "ADDRESS {$address->id} - Completed Sync of ADDRESS ID {$address->id}...\n";

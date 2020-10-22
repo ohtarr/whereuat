@@ -73,9 +73,9 @@ class SyncBssids extends Command
                     try{
                         $bssid->createOrUpdateTeamsBssid();
                     } catch(\Exception $e) {
-                        $msg = $e->getMessage() ."\n";
+                        $msg = "BSSID {$bssid->bssid} - " . $e->getMessage() ."\n";
                         print $msg;
-                        Log::info($msg);
+                        Log::error($msg);
                     }
                 }
 
@@ -86,9 +86,9 @@ class SyncBssids extends Command
                 try{
                     $bssid->createOrUpdateTeamsBssid();
                 } catch(\Exception $e) {
-                    $msg = $e->getMessage() . "\n";
+                    $msg = "BSSID {$bssid->bssid} - " . $e->getMessage() . "\n";
                     print $msg;
-                    Log::info($msg);
+                    Log::error($msg);
                 }
             }
         }
