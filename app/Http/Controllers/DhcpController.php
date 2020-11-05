@@ -27,6 +27,9 @@ class DhcpController extends Controller
     public function findSiteByIp($ip)
     {
         $scope = Dhcp::findScope($ip);
-        return $scope->withSite();
+        if($scope)
+        {
+            return $scope->withSite();
+        }
     }
 }
