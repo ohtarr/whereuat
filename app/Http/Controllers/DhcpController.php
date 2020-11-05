@@ -17,6 +17,17 @@ class DhcpController extends Controller
         return Dhcp::all();
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($scopeID)
+    {
+        return Dhcp::all()->where('scopeID',$scopeID)->first();
+    }
+
     public function indexWithSites()
     {
         //return Dhcp::allWithSites();

@@ -9,14 +9,15 @@
     "license": "MIT",
     "require": {
         "php": "^7.2.5",
+        "darkaonline/l5-swagger": "^8.0",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^1.0",
         "guzzlehttp/guzzle": "^6.3",
+        "iahunter/php-911enable-egw": "dev-master",
         "laravel/framework": "^7.0",
         "laravel/tinker": "^2.0",
-        "ohtarr/service-now-model": "dev-master",
-        "iahunter/php-911enable-egw": "dev-master",
-        "markrogoyski/ipv4-subnet-calculator": "3.*"
+        "markrogoyski/ipv4-subnet-calculator": "3.*",
+        "ohtarr/service-now-model": "dev-master"
     },
     "require-dev": {
         "facade/ignition": "^2.0",
