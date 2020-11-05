@@ -123,8 +123,11 @@ class Dhcp extends Model
     public function withSite()
     {
         $site = $this->findSite();
-        $site->load('address');
-        $this->site = $site;
+        if($site)
+        {
+            $site->load('address');
+            $this->site = $site;
+        }
         return $this;
     }
 
