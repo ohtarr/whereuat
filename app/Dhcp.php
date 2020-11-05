@@ -120,4 +120,12 @@ class Dhcp extends Model
         return collect($newscopes);
     }
 
+    public function withSite()
+    {
+        $site = $this->findSite();
+        $site->load('address');
+        $this->site = $site;
+        return $this;
+    }
+
 }
