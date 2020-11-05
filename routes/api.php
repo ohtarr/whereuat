@@ -19,3 +19,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('/ipsite/{ip}','DhcpController@findSiteByIp');
+
+Route::get('/scopesites/','DhcpController@indexWithSites');

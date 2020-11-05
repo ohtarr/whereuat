@@ -103,4 +103,21 @@ class Dhcp extends Model
         }
     }
 
+    public static function allWithSites($columns = [])
+    {
+        $scopes = self::all();
+        foreach($scopes as $scope)
+        {
+            $newscope = $scope;
+            $site = $scope->findSite();
+            if($site)
+            {
+                $site->load('address');
+                $newscope['site'] = $site;
+            }
+            $newscopes[] = $newscope;
+        }
+        return collect($newscopes);
+    }
+
 }

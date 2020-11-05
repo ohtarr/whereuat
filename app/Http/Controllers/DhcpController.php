@@ -17,10 +17,15 @@ class DhcpController extends Controller
         return Dhcp::all();
     }
 
+    public function indexWithSites()
+    {
+        //return Dhcp::allWithSites();
+        return response()->file(storage_path('app/public/Scopes.json'),['Content-Type','application/json']);
+        //return file(storage_path('app/public/Scopes.json'));
+    }
+
     public function findSiteByIp($ip)
     {
         return Dhcp::findScope($ip)->findSite();
     }
-
-
 }
