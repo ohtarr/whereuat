@@ -47,7 +47,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
  * Returns All DHCP Scopes
  */
 
- Route::get('/dhcp','DhcpController@index');
+ Route::get('/dhcp','API\DhcpController@index');
 
  /**
  * @OA\Get(
@@ -78,7 +78,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
  * Returns scope information for a scope.
  */
 
- Route::get('/dhcp/{scopeID}','DhcpController@show');
+ Route::get('/dhcp/{scopeID}','API\DhcpController@show');
 
  /**
  * @OA\Get(
@@ -108,7 +108,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
  *
  * Returns scope information for an IP
  */
-Route::get('/ipsite/{ip}','DhcpController@findSiteByIp');
+Route::get('/ipsite/{ip}','API\DhcpController@findSiteByIp');
 
 /**
  * @OA\Get(
@@ -129,4 +129,205 @@ Route::get('/ipsite/{ip}','DhcpController@findSiteByIp');
  *
  * Returns all Scopes, including SITE/ADDRESS information.
  */
-Route::get('/scopesites/','DhcpController@indexWithSites');
+Route::get('/scopesites/','API\DhcpController@indexWithSites');
+
+/**
+ * @OA\Get(
+ *      path="/api/address",
+ *      operationId="index",
+ *      tags={"ADDRESS"},
+ *      summary="Get All Addresses",
+ *      description="Return all Addresses.",
+ *      @OA\Response(
+ *          response=200,
+ *          description="successful operation"
+ *       ),
+ *       @OA\Response(response=400, description="Bad request"),
+ *       security={
+ *           {"api_key_security_example": {}}
+ *       }
+ *     )
+ *
+ * Returns All Addresses
+ */
+
+/**
+* @OA\Get(
+*      path="/api/address/{id}",
+*      operationId="show",
+*      tags={"ADDRESS"},
+*      summary="Get Address info",
+*      description="Returns Address information",
+*      @OA\Parameter(
+*          name="id",
+*          description="Address ID",
+*          required=true,
+*          in="path",
+*          @OA\Schema(
+*              type="integer"
+*          )
+*      ),
+*      @OA\Response(
+*          response=200,
+*          description="successful operation"
+*       ),
+*       @OA\Response(response=400, description="Bad request"),
+*       security={
+*           {"api_key_security_example": {}}
+*       }
+*     )
+*
+* Returns Address information.
+*/
+
+Route::apiResource('address', API\AddressController::class);
+
+/**
+ * @OA\Get(
+ *      path="/api/site",
+ *      operationId="index",
+ *      tags={"SITE"},
+ *      summary="Get All Sites",
+ *      description="Return all Sites.",
+ *      @OA\Response(
+ *          response=200,
+ *          description="successful operation"
+ *       ),
+ *       @OA\Response(response=400, description="Bad request"),
+ *       security={
+ *           {"api_key_security_example": {}}
+ *       }
+ *     )
+ *
+ * Returns All Sites
+ */
+
+/**
+* @OA\Get(
+*      path="/api/site/{id}",
+*      operationId="show",
+*      tags={"SITE"},
+*      summary="Get Site info",
+*      description="Returns Site information",
+*      @OA\Parameter(
+*          name="id",
+*          description="Site ID",
+*          required=true,
+*          in="path",
+*          @OA\Schema(
+*              type="integer"
+*          )
+*      ),
+*      @OA\Response(
+*          response=200,
+*          description="successful operation"
+*       ),
+*       @OA\Response(response=400, description="Bad request"),
+*       security={
+*           {"api_key_security_example": {}}
+*       }
+*     )
+*
+* Returns Site information.
+*/
+Route::apiResource('site', API\SiteController::class);
+
+/**
+ * @OA\Get(
+ *      path="/api/building",
+ *      operationId="index",
+ *      tags={"BUILDING"},
+ *      summary="Get All Buildings",
+ *      description="Return all Buildings.",
+ *      @OA\Response(
+ *          response=200,
+ *          description="successful operation"
+ *       ),
+ *       @OA\Response(response=400, description="Bad request"),
+ *       security={
+ *           {"api_key_security_example": {}}
+ *       }
+ *     )
+ *
+ * Returns All Buildings
+ */
+
+/**
+* @OA\Get(
+*      path="/api/building/{id}",
+*      operationId="show",
+*      tags={"BUILDING"},
+*      summary="Get Building info",
+*      description="Returns Building information",
+*      @OA\Parameter(
+*          name="id",
+*          description="Building ID",
+*          required=true,
+*          in="path",
+*          @OA\Schema(
+*              type="integer"
+*          )
+*      ),
+*      @OA\Response(
+*          response=200,
+*          description="successful operation"
+*       ),
+*       @OA\Response(response=400, description="Bad request"),
+*       security={
+*           {"api_key_security_example": {}}
+*       }
+*     )
+*
+* Returns Building information.
+*/
+Route::apiResource('building', API\BuildingController::class);
+
+/**
+ * @OA\Get(
+ *      path="/api/room",
+ *      operationId="index",
+ *      tags={"ROOM"},
+ *      summary="Get All Rooms",
+ *      description="Return all Rooms.",
+ *      @OA\Response(
+ *          response=200,
+ *          description="successful operation"
+ *       ),
+ *       @OA\Response(response=400, description="Bad request"),
+ *       security={
+ *           {"api_key_security_example": {}}
+ *       }
+ *     )
+ *
+ * Returns All Rooms
+ */
+
+/**
+* @OA\Get(
+*      path="/api/room/{id}",
+*      operationId="show",
+*      tags={"ROOM"},
+*      summary="Get Room info",
+*      description="Returns Room information",
+*      @OA\Parameter(
+*          name="id",
+*          description="Room ID",
+*          required=true,
+*          in="path",
+*          @OA\Schema(
+*              type="integer"
+*          )
+*      ),
+*      @OA\Response(
+*          response=200,
+*          description="successful operation"
+*       ),
+*       @OA\Response(response=400, description="Bad request"),
+*       security={
+*           {"api_key_security_example": {}}
+*       }
+*     )
+*
+* Returns Room information.
+*/
+Route::apiResource('room', API\RoomController::class);

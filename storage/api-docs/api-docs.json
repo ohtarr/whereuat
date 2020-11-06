@@ -1,0 +1,355 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Where U At",
+        "description": "Location Services",
+        "version": "0.0.1"
+    },
+    "paths": {
+        "/api/dhcp": {
+            "get": {
+                "tags": [
+                    "DHCP"
+                ],
+                "summary": "Get All DHCP scopes",
+                "description": "Return all DHCP scopes.",
+                "operationId": "index",
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key_security_example": []
+                    }
+                ]
+            }
+        },
+        "/api/dhcp/{scopeID}": {
+            "get": {
+                "tags": [
+                    "DHCP"
+                ],
+                "summary": "Get Scope info",
+                "description": "Returns Scope information",
+                "operationId": "show",
+                "parameters": [
+                    {
+                        "name": "scopeID",
+                        "in": "path",
+                        "description": "Scope ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key_security_example": []
+                    }
+                ]
+            }
+        },
+        "/api/ipsite/{ip}": {
+            "get": {
+                "tags": [
+                    "DHCP"
+                ],
+                "summary": "Get Scope info, including SITE information if available",
+                "description": "Returns Scope information, including SITE information if available.",
+                "operationId": "findSiteByIp",
+                "parameters": [
+                    {
+                        "name": "ip",
+                        "in": "path",
+                        "description": "IP Address",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key_security_example": []
+                    }
+                ]
+            }
+        },
+        "/api/scopesites": {
+            "get": {
+                "tags": [
+                    "DHCP"
+                ],
+                "summary": "Get all scopes with SITE information included.",
+                "description": "Get all scopes with SITE information included.",
+                "operationId": "allWithSites",
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key_security_example": []
+                    }
+                ]
+            }
+        },
+        "/api/address": {
+            "get": {
+                "tags": [
+                    "ADDRESS"
+                ],
+                "summary": "Get All Addresses",
+                "description": "Return all Addresses.",
+                "operationId": "index",
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key_security_example": []
+                    }
+                ]
+            }
+        },
+        "/api/address/{id}": {
+            "get": {
+                "tags": [
+                    "ADDRESS"
+                ],
+                "summary": "Get Address info",
+                "description": "Returns Address information",
+                "operationId": "show",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Address ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key_security_example": []
+                    }
+                ]
+            }
+        },
+        "/api/site": {
+            "get": {
+                "tags": [
+                    "SITE"
+                ],
+                "summary": "Get All Sites",
+                "description": "Return all Sites.",
+                "operationId": "index",
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key_security_example": []
+                    }
+                ]
+            }
+        },
+        "/api/site/{id}": {
+            "get": {
+                "tags": [
+                    "SITE"
+                ],
+                "summary": "Get Site info",
+                "description": "Returns Site information",
+                "operationId": "show",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Site ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key_security_example": []
+                    }
+                ]
+            }
+        },
+        "/api/building": {
+            "get": {
+                "tags": [
+                    "BUILDING"
+                ],
+                "summary": "Get All Buildings",
+                "description": "Return all Buildings.",
+                "operationId": "index",
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key_security_example": []
+                    }
+                ]
+            }
+        },
+        "/api/building/{id}": {
+            "get": {
+                "tags": [
+                    "BUILDING"
+                ],
+                "summary": "Get Building info",
+                "description": "Returns Building information",
+                "operationId": "show",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Building ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key_security_example": []
+                    }
+                ]
+            }
+        },
+        "/api/room": {
+            "get": {
+                "tags": [
+                    "ROOM"
+                ],
+                "summary": "Get All Rooms",
+                "description": "Return all Rooms.",
+                "operationId": "index",
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key_security_example": []
+                    }
+                ]
+            }
+        },
+        "/api/room/{id}": {
+            "get": {
+                "tags": [
+                    "ROOM"
+                ],
+                "summary": "Get Room info",
+                "description": "Returns Room information",
+                "operationId": "show",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Room ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key_security_example": []
+                    }
+                ]
+            }
+        }
+    },
+    "security": [
+        []
+    ]
+}
