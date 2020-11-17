@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Dhcp;
 use Illuminate\Http\Request;
+use App\Http\Resources\DhcpCollection;
 
 class DhcpController extends Controller
 {
@@ -13,9 +14,20 @@ class DhcpController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Dhcp::all();
+        //return Dhcp::all()->paginate(100);
+        if($request->paginate)
+        {
+            $paginate = $request->paginate;
+        } else {
+            $paginate = 100;
+        }
+        //$scopes = collect(Dhcp::all()->paginate($paginate, 'page', $request->page));
+        $scopes = Dhcp::all()->paginate($paginate, 'page', $request->page);
+        //return new DhcpCollection(collect(Dhcp::all()->paginate(100, 'page', $request->page)));
+        return new DhcpCollection($scopes);
+
     }
 
     /**

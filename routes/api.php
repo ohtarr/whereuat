@@ -230,6 +230,7 @@ Route::apiResource('address', API\AddressController::class);
 *
 * Returns Site information.
 */
+
 Route::apiResource('site', API\SiteController::class);
 
 /**
