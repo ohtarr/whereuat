@@ -46,7 +46,9 @@ class SiteController extends Controller
                 'buildings.rooms',
                 'defaultBuilding',
                 'defaultBuilding.rooms',
-            ]);
+            ])
+            ->allowedSorts('name')
+            ->defaultSort('id');
 
         //$sites = $query->paginate($paginate);
         $sites = $query->get();
