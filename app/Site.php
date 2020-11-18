@@ -14,8 +14,8 @@ class Site extends Model
     public $loc;
 
     protected $appends = [
-        'servicenowlocation',
-        'rooms',
+        //'servicenowlocation',
+        //'rooms',
     ];
 
     //WHEREUAT_ADDRESS to SERVICENOWLOCATION field mappings

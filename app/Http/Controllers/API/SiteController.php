@@ -28,6 +28,7 @@ class SiteController extends Controller
 		$query = QueryBuilder::for(Site::class)
             ->allowedAppends([
                 'servicenowlocation',
+                'rooms',
             ])
             ->allowedFilters([
                 'id',
@@ -46,10 +47,12 @@ class SiteController extends Controller
                 'defaultBuilding.rooms',
             ]);
 
-        $sites = $query->paginate($paginate);
+        //$sites = $query->paginate($paginate);
+        $sites = $query->get();
 
-        //return $sites;
-        return SiteResource::collection($sites);
+        return $sites;
+        //return $sites->paginate($paginate, 'page', $request->page);
+        //return SiteResource::collection($sites);
 
         //return Site::all(); */
     }
