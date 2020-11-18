@@ -22,13 +22,14 @@ class SiteController extends Controller
         {
             $paginate = $request->paginate;
         } else {
-            $paginate = env("ASSETS_PAGINATION");
+            $paginate = env("DEFAULT_PAGINATION");
         }
 
 		$query = QueryBuilder::for(Site::class)
             ->allowedAppends([
                 'servicenowlocation',
                 'rooms',
+                'contact911',
             ])
             ->allowedFilters([
                 'id',
@@ -50,8 +51,8 @@ class SiteController extends Controller
         //$sites = $query->paginate($paginate);
         $sites = $query->get();
 
-        return $sites;
-        //return $sites->paginate($paginate, 'page', $request->page);
+        //return $sites;
+        return $sites->paginate($paginate, 'page', $request->page);
         //return SiteResource::collection($sites);
 
         //return Site::all(); */

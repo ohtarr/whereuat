@@ -118,6 +118,11 @@ class Site extends Model
         return $this->contact;
     }
 
+    public function getContact911Attribute()
+    {
+        return $this->get911Contact();
+    }
+
     public function syncAdd()
     {
         $this->syncAddress();
