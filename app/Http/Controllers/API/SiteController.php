@@ -44,8 +44,8 @@ class SiteController extends Controller
                 'contact',
                 'buildings',
                 'buildings.rooms',
-                'defaultBuilding',
-                'defaultBuilding.rooms',
+                'defaultbuilding',
+                'defaultbuilding.rooms',
             ])
             ->allowedSorts('name')
             ->defaultSort('id');
