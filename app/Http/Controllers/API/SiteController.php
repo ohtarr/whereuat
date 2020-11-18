@@ -7,6 +7,7 @@ use App\Site;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\Filter;
+use App\Http\Resources\SiteResource;
 
 class SiteController extends Controller
 {
@@ -24,34 +25,33 @@ class SiteController extends Controller
             $paginate = env("ASSETS_PAGINATION");
         }
 
-        $filters = [
-            'id',
-            'name',
-            'address_id',
-            'contact_id',
-            'loc_sys_id',
-            'location_id',
-        ];
-
-        $includes = [
-            'address',
-            'contact',
-            'buildings',
-            'buildings.rooms',
-            'defaultBuilding',
-            'defaultBuilding.rooms',
-        ];
-
 		$query = QueryBuilder::for(Site::class)
-		    ->allowedFilters($filters)
-		    ->allowedIncludes($includes);
+            ->allowedAppends([
+                'servicenowlocation',
+            ])
+            ->allowedFilters([
+                'id',
+                'name',
+                'address_id',
+                'contact_id',
+                'loc_sys_id',
+                'location_id',
+            ])
+		    ->allowedIncludes([
+                'address',
+                'contact',
+                'buildings',
+                'buildings.rooms',
+                'defaultBuilding',
+                'defaultBuilding.rooms',
+            ]);
 
         $sites = $query->paginate($paginate);
 
-        return $sites;
-/*         return new AssetCollection($assets);
+        //return $sites;
+        return SiteResource::collection($sites);
 
-        return Site::all(); */
+        //return Site::all(); */
     }
 
     /**

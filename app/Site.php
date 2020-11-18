@@ -13,6 +13,11 @@ class Site extends Model
 {
     public $loc;
 
+    protected $appends = [
+        'servicenowlocation',
+        'rooms',
+    ];
+
     //WHEREUAT_ADDRESS to SERVICENOWLOCATION field mappings
     public $addressMapping = [
         'street_number'             => 'u_street_number',
@@ -58,6 +63,11 @@ class Site extends Model
         return $this->loc;
     }
 
+    public function getServiceNowLocationAttribute()
+    {
+        return $this->getServiceNowLocation();
+    }
+
     public function getAllRooms()
     {
         foreach($this->buildings as $building)
@@ -69,6 +79,11 @@ class Site extends Model
 
         }
         return collect($array);
+    }
+
+    public function getRoomsAttribute()
+    {
+        return $this->getAllRooms();
     }
 
     public function getAddress()
