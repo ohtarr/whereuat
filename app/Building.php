@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use App\Room;
+use App\Address;
 
 class Building extends Model
 {

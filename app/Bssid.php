@@ -35,7 +35,7 @@ class Bssid extends Model
                 $tmp['bssid'] = strtoupper(str_replace(":", "-", $item['bssid']));
                 if(isset($item['neighbor']['snmp']['room']))
                 {
-                    $tmp['room'] = $item['neighbor']['snmp']['room'];
+                    $tmp['room_id'] = $item['neighbor']['snmp']['room'];
                 }
                 if(isset($item['neighbor']['name']))
                 {
@@ -46,6 +46,16 @@ class Bssid extends Model
             }
         }
         return collect($bssids);
+    }
+
+    public static function find($bssid)
+    {
+        return self::all()->where('bssid',$bssid)->first();
+    }
+
+    public static function where($key,$value)
+    {
+        return Bssid::all()->where($key,$value);
     }
 
     public function cacheAll($force = false)
@@ -78,12 +88,17 @@ class Bssid extends Model
         return Site::where("name",$this->getSiteCode())->first();
     }
 
+    public function getSiteAttribute()
+    {
+        return $this->getSite();
+    }
+
     public function getRoom()
     {
         $room = null;
-        if($this->room)
+        if($this->room_id)
         {
-            $room = Room::find($this->room);
+            $room = Room::find($this->room_id);
         }
         
         if(!$room)
@@ -96,6 +111,11 @@ class Bssid extends Model
         }
 
         return $room;
+    }
+
+    public function getRoomAttribute()
+    {
+        return $this->getRoom();
     }
 
     public function getTeamsLocationId()
@@ -158,4 +178,14 @@ class Bssid extends Model
         }
         return $matches;
     }
+
+    public static function formatMac($mac)
+    {
+        $mac = str_replace(":", '', $mac);
+        $mac = str_replace("-", '', $mac);
+        $mac = str_replace(".", '', $mac);
+        $mac = strtolower($mac);
+        return $mac;
+    }
+
 }

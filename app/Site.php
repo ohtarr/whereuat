@@ -8,6 +8,7 @@ use App\ServiceNowUser;
 use App\Address;
 use App\Contact;
 use App\Building;
+use App\Dhcp;
 
 class Site extends Model
 {
@@ -157,6 +158,11 @@ class Site extends Model
         }
         print "ADDRESS with ID {$address->id} was found...\n";
         return $address; */
+    }
+
+    public function getScopesAttribute()
+    {
+        return Dhcp::findSiteScopes($this->name);
     }
 
     public function syncContact()

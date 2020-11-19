@@ -27,6 +27,11 @@ class Dhcp extends Model
         return collect($scopes);
     }
 
+    public static function find($scopeID)
+    {
+        return self::all()->where('scopeID',$scopeID)->first();
+    }
+
     public function cacheAll($force = false)
     {
         if($force || !$this->cache)
@@ -48,8 +53,14 @@ class Dhcp extends Model
         }
     }
 
+    public function getSiteAttribute()
+    {
+        return $this->findSite();
+    }
+
     public static function findSiteScopes($sitename)
     {
+        $scopes = [];
         foreach(static::all() as $scope)
         {
             if(stripos($scope['name'],$sitename) !== false)
