@@ -332,3 +332,5 @@ Route::apiResource('building', API\BuildingController::class);
 * Returns Room information.
 */
 Route::apiResource('room', API\RoomController::class);
+
+Route::apiResource('bssid', API\BssidController::class);
