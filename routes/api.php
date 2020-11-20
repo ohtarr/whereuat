@@ -32,8 +32,83 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
  *      path="/api/dhcp",
  *      operationId="index",
  *      tags={"DHCP"},
- *      summary="Get All DHCP scopes",
- *      description="Return all DHCP scopes.",
+ *      summary="Get All DHCP Scopes",
+ *      description="Return all DHCP Scopes.",
+ * @OA\Parameter(
+ *         name="filter[name]",
+ *         in="query",
+ *         description="name of DHCP Scope",
+ *         required=false,
+ *         @OA\Schema(
+ *           type="string"
+ *         ),
+ *     ),
+ * @OA\Parameter(
+ *         name="filter[description]",
+ *         in="query",
+ *         description="description of DHCP Scope",
+ *         required=false,
+ *         @OA\Schema(
+ *           type="string"
+ *         ),
+ *     ),
+ * @OA\Parameter(
+ *         name="filter[scopeid]",
+ *         in="query",
+ *         description="scopeid of DHCP Scope",
+ *         required=false,
+ *         @OA\Schema(
+ *           type="string"
+ *         ),
+ *     ),
+ * @OA\Parameter(
+ *         name="reservations",
+ *         in="query",
+ *         description="Include reservations for DHCP Scope",
+ *         required=false,
+ *         allowEmptyValue=true,
+ *         @OA\Schema(
+ *           type="boolean"
+ *         ),
+ *     ),
+ * @OA\Parameter(
+ *         name="failover",
+ *         in="query",
+ *         description="Include failover information for DHCP Scope",
+ *         required=false,
+ *         allowEmptyValue=true,
+ *         @OA\Schema(
+ *           type="boolean"
+ *         ),
+ *     ),
+ * @OA\Parameter(
+ *         name="site",
+ *         in="query",
+ *         description="Include site information for DHCP Scope",
+ *         required=false,
+ *         allowEmptyValue=true,
+ *         @OA\Schema(
+ *           type="boolean"
+ *         ),
+ *     ),
+ * @OA\Parameter(
+ *         name="paginate",
+ *         in="query",
+ *         description="number of records per page",
+ *         required=false,
+ *         @OA\Schema(
+ *           type="integer"
+ *         ),
+ *     ),
+ * @OA\Parameter(
+ *         name="page",
+ *         in="query",
+ *         description="pagination page to view",
+ *         required=false,
+ *         @OA\Schema(
+ *           type="integer"
+ *         ),
+ *     ),
  *      @OA\Response(
  *          response=200,
  *          description="successful operation"
@@ -44,7 +119,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
  *       }
  *     )
  *
- * Returns All DHCP Scopes
+ * Returns All Bssids
  */
 
  Route::get('/dhcp','API\DhcpController@index');
@@ -332,5 +407,82 @@ Route::apiResource('building', API\BuildingController::class);
 * Returns Room information.
 */
 Route::apiResource('room', API\RoomController::class);
+
+
+/**
+ * @OA\Get(
+ *      path="/api/bssid",
+ *      operationId="index",
+ *      tags={"BSSID"},
+ *      summary="Get All Bssids",
+ *      description="Return all Bssids.",
+ * @OA\Parameter(
+ *         name="filter[name]",
+ *         in="query",
+ *         description="name of BSSID AP",
+ *         required=false,
+ *         @OA\Schema(
+ *           type="string"
+ *         ),
+ *     ),
+ * @OA\Parameter(
+ *         name="filter[bssid]",
+ *         in="query",
+ *         description="BSSID MAC",
+ *         required=false,
+ *         @OA\Schema(
+ *           type="string"
+ *         ),
+ *     ),
+ * @OA\Parameter(
+ *         name="filter[neighbor]",
+ *         in="query",
+ *         description="name of BSSID AP Neighbor (switch)",
+ *         required=false,
+ *         @OA\Schema(
+ *           type="string"
+ *         ),
+ *     ),
+ * @OA\Parameter(
+ *         name="location",
+ *         in="query",
+ *         description="Include Location information with Bssid",
+ *         required=false,
+ *         allowEmptyValue=true,
+ *         @OA\Schema(
+ *           type="boolean"
+ *         ),
+ *     ),
+ * @OA\Parameter(
+ *         name="paginate",
+ *         in="query",
+ *         description="number of records per page",
+ *         required=false,
+ *         @OA\Schema(
+ *           type="integer"
+ *         ),
+ *     ),
+ * @OA\Parameter(
+ *         name="page",
+ *         in="query",
+ *         description="pagination page to view",
+ *         required=false,
+ *         @OA\Schema(
+ *           type="integer"
+ *         ),
+ *     ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="successful operation"
+ *       ),
+ *       @OA\Response(response=400, description="Bad request"),
+ *       security={
+ *           {"api_key_security_example": {}}
+ *       }
+ *     )
+ *
+ * Returns All Bssids
+ */
+
 
 Route::apiResource('bssid', API\BssidController::class);

@@ -11,9 +11,86 @@
                 "tags": [
                     "DHCP"
                 ],
-                "summary": "Get All DHCP scopes",
-                "description": "Return all DHCP scopes.",
+                "summary": "Get All DHCP Scopes",
+                "description": "Return all DHCP Scopes.",
                 "operationId": "index",
+                "parameters": [
+                    {
+                        "name": "filter[name]",
+                        "in": "query",
+                        "description": "name of DHCP Scope",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[description]",
+                        "in": "query",
+                        "description": "description of DHCP Scope",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[scopeid]",
+                        "in": "query",
+                        "description": "scopeid of DHCP Scope",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "reservations",
+                        "in": "query",
+                        "description": "Include reservations for DHCP Scope",
+                        "required": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "failover",
+                        "in": "query",
+                        "description": "Include failover information for DHCP Scope",
+                        "required": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "site",
+                        "in": "query",
+                        "description": "Include site information for DHCP Scope",
+                        "required": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "paginate",
+                        "in": "query",
+                        "description": "number of records per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "pagination page to view",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "successful operation"
@@ -328,6 +405,86 @@
                         "in": "path",
                         "description": "Room ID",
                         "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key_security_example": []
+                    }
+                ]
+            }
+        },
+        "/api/bssid": {
+            "get": {
+                "tags": [
+                    "BSSID"
+                ],
+                "summary": "Get All Bssids",
+                "description": "Return all Bssids.",
+                "operationId": "index",
+                "parameters": [
+                    {
+                        "name": "filter[name]",
+                        "in": "query",
+                        "description": "name of BSSID AP",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[bssid]",
+                        "in": "query",
+                        "description": "BSSID MAC",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[neighbor]",
+                        "in": "query",
+                        "description": "name of BSSID AP Neighbor (switch)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "location",
+                        "in": "query",
+                        "description": "Include Location information with Bssid",
+                        "required": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "paginate",
+                        "in": "query",
+                        "description": "number of records per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "pagination page to view",
+                        "required": false,
                         "schema": {
                             "type": "integer"
                         }

@@ -17,13 +17,16 @@ class BssidResource extends JsonResource
         $return = $this->getAttributes();
         if ($request->has('location')) {
             $room = $this->room;
-            $room->building;
-            $room->building->address;
-            $return['room'] = $room;
-            $address = $room->building->getAddress();
-            $room->building->unsetRelation('address'); 
-            $return['room']->building->address =  $address;
-            $room->building->site->unsetRelation('address');
+            if($room)
+            {
+                //$room->building;
+                $room->building->address;
+                $return['room'] = $room;
+                $address = $room->building->getAddress();
+                $room->building->unsetRelation('address'); 
+                $return['room']->building->address =  $address;
+                $room->building->site->unsetRelation('address');
+            }
         }
         return $return;
     }
