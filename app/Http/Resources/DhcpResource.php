@@ -26,9 +26,14 @@ class DhcpResource extends JsonResource
             unset($return['failover']);
         }
 
-        if($request->has('site'))
+        if($request->has('location'))
         {
-            $return['site'] = $this->site;
+            $site = $this->site;
+            if($site)
+            {
+                $site['address'] = $this->site->address;
+            }
+            $return['site'] = $site;
         }
 
         return $return;

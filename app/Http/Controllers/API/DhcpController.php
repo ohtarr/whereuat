@@ -16,15 +16,20 @@ class DhcpController extends Controller
      */
     public function index(Request $request)
     {
-        $alldhcp = Dhcp::all();
-
-        $returndhcp = $alldhcp;
-
+        $returndhcp = Dhcp::all();
         if($request->paginate)
         {
             $paginate = $request->paginate;
         } else {
             $paginate = env("DEFAULT_PAGINATION");
+        }
+
+        if($request->has('filter.ip'))
+        {
+            $scope = Dhcp::findScope($request->filter['ip']);
+            $returndhcp = collect([$scope]);
+            //$returndhcp = $scope;
+            //print_r($returndhcp);
         }
 
         if($request->has('filter.name'))
@@ -64,22 +69,8 @@ class DhcpController extends Controller
      */
     public function show($scopeID)
     {
-        return Dhcp::all()->where('scopeID',$scopeID)->first();
+        //return Dhcp::all()->where('scopeID',$scopeID)->first();
+        return new DhcpResource(Dhcp::all()->where('scopeID',$scopeID)->first());
     }
 
-    public function indexWithSites()
-    {
-        //return Dhcp::allWithSites();
-        return response()->file(storage_path('app/public/Scopes.json'),['Content-Type','application/json']);
-        //return file(storage_path('app/public/Scopes.json'));
-    }
-
-    public function findSiteByIp($ip)
-    {
-        $scope = Dhcp::findScope($ip);
-        if($scope)
-        {
-            return $scope->withSite();
-        }
-    }
 }

@@ -35,6 +35,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
  *      summary="Get All DHCP Scopes",
  *      description="Return all DHCP Scopes.",
  * @OA\Parameter(
+ *         name="filter[ip]",
+ *         in="query",
+ *         description="IP address in scope",
+ *         required=false,
+ *         @OA\Schema(
+ *           type="string"
+ *         ),
+ *     ),
+ * @OA\Parameter(
  *         name="filter[name]",
  *         in="query",
  *         description="name of DHCP Scope",
@@ -82,9 +91,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
  *         ),
  *     ),
  * @OA\Parameter(
- *         name="site",
+ *         name="location",
  *         in="query",
- *         description="Include site information for DHCP Scope",
+ *         description="Include location information for DHCP Scope",
  *         required=false,
  *         allowEmptyValue=true,
  *         @OA\Schema(
@@ -140,6 +149,36 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
  *              type="string"
  *          )
  *      ),
+ * @OA\Parameter(
+ *         name="reservations",
+ *         in="query",
+ *         description="Include reservations for DHCP Scope",
+ *         required=false,
+ *         allowEmptyValue=true,
+ *         @OA\Schema(
+ *           type="boolean"
+ *         ),
+ *     ),
+ * @OA\Parameter(
+ *         name="failover",
+ *         in="query",
+ *         description="Include failover information for DHCP Scope",
+ *         required=false,
+ *         allowEmptyValue=true,
+ *         @OA\Schema(
+ *           type="boolean"
+ *         ),
+ *     ),
+ * @OA\Parameter(
+ *         name="location",
+ *         in="query",
+ *         description="Include location information for DHCP Scope",
+ *         required=false,
+ *         allowEmptyValue=true,
+ *         @OA\Schema(
+ *           type="boolean"
+ *         ),
+ *     ),
  *      @OA\Response(
  *          response=200,
  *          description="successful operation"
@@ -154,57 +193,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
  */
 
  Route::get('/dhcp/{scopeID}','API\DhcpController@show');
-
- /**
- * @OA\Get(
- *      path="/api/ipsite/{ip}",
- *      operationId="findSiteByIp",
- *      tags={"DHCP"},
- *      summary="Get Scope info, including SITE information if available",
- *      description="Returns Scope information, including SITE information if available.",
- *      @OA\Parameter(
- *          name="ip",
- *          description="IP Address",
- *          required=true,
- *          in="path",
- *          @OA\Schema(
- *              type="string"
- *          )
- *      ),
- *      @OA\Response(
- *          response=200,
- *          description="successful operation"
- *       ),
- *       @OA\Response(response=400, description="Bad request"),
- *       security={
- *           {"api_key_security_example": {}}
- *       }
- *     )
- *
- * Returns scope information for an IP
- */
-Route::get('/ipsite/{ip}','API\DhcpController@findSiteByIp');
-
-/**
- * @OA\Get(
- *      path="/api/scopesites",
- *      operationId="allWithSites",
- *      tags={"DHCP"},
- *      summary="Get all scopes with SITE information included.",
- *      description="Get all scopes with SITE information included.",
- *      @OA\Response(
- *          response=200,
- *          description="successful operation"
- *       ),
- *       @OA\Response(response=400, description="Bad request"),
- *       security={
- *           {"api_key_security_example": {}}
- *       }
- *     )
- *
- * Returns all Scopes, including SITE/ADDRESS information.
- */
-Route::get('/scopesites/','API\DhcpController@indexWithSites');
 
 /**
  * @OA\Get(
@@ -450,7 +438,8 @@ Route::apiResource('room', API\RoomController::class);
  *         required=false,
  *         allowEmptyValue=true,
  *         @OA\Schema(
- *           type="boolean"
+ *           type="boolean",
+ *           enum=""
  *         ),
  *     ),
  * @OA\Parameter(

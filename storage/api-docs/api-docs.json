@@ -16,6 +16,15 @@
                 "operationId": "index",
                 "parameters": [
                     {
+                        "name": "filter[ip]",
+                        "in": "query",
+                        "description": "IP address in scope",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "name": "filter[name]",
                         "in": "query",
                         "description": "name of DHCP Scope",
@@ -63,9 +72,9 @@
                         }
                     },
                     {
-                        "name": "site",
+                        "name": "location",
                         "in": "query",
-                        "description": "Include site information for DHCP Scope",
+                        "description": "Include location information for DHCP Scope",
                         "required": false,
                         "allowEmptyValue": true,
                         "schema": {
@@ -123,65 +132,38 @@
                         "schema": {
                             "type": "string"
                         }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
                     },
-                    "400": {
-                        "description": "Bad request"
-                    }
-                },
-                "security": [
                     {
-                        "api_key_security_example": []
-                    }
-                ]
-            }
-        },
-        "/api/ipsite/{ip}": {
-            "get": {
-                "tags": [
-                    "DHCP"
-                ],
-                "summary": "Get Scope info, including SITE information if available",
-                "description": "Returns Scope information, including SITE information if available.",
-                "operationId": "findSiteByIp",
-                "parameters": [
-                    {
-                        "name": "ip",
-                        "in": "path",
-                        "description": "IP Address",
-                        "required": true,
+                        "name": "reservations",
+                        "in": "query",
+                        "description": "Include reservations for DHCP Scope",
+                        "required": false,
+                        "allowEmptyValue": true,
                         "schema": {
-                            "type": "string"
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "failover",
+                        "in": "query",
+                        "description": "Include failover information for DHCP Scope",
+                        "required": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "location",
+                        "in": "query",
+                        "description": "Include location information for DHCP Scope",
+                        "required": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "boolean"
                         }
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    },
-                    "400": {
-                        "description": "Bad request"
-                    }
-                },
-                "security": [
-                    {
-                        "api_key_security_example": []
-                    }
-                ]
-            }
-        },
-        "/api/scopesites": {
-            "get": {
-                "tags": [
-                    "DHCP"
-                ],
-                "summary": "Get all scopes with SITE information included.",
-                "description": "Get all scopes with SITE information included.",
-                "operationId": "allWithSites",
                 "responses": {
                     "200": {
                         "description": "successful operation"
@@ -468,7 +450,8 @@
                         "required": false,
                         "allowEmptyValue": true,
                         "schema": {
-                            "type": "boolean"
+                            "type": "boolean",
+                            "enum": ""
                         }
                     },
                     {

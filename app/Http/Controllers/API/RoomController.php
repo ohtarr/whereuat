@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Room;
 use Illuminate\Http\Request;
+use App\Http\Resources\RoomResource;
 
 class RoomController extends Controller
 {
@@ -37,7 +38,7 @@ class RoomController extends Controller
      */
     public function show(Room $room)
     {
-        return $room;
+        return new RoomResource($room);
     }
 
     /**
