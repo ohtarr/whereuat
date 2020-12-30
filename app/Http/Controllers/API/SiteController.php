@@ -26,14 +26,7 @@ class SiteController extends Controller
         }
 
 		$query = QueryBuilder::for(Site::class)
-            ->allowedAppends([
-                'servicenowlocation',
-                'rooms',
-                'contact911',
-                'scopes',
-            ])
             ->allowedFilters([
-                'id',
                 'name',
                 'address_id',
                 'contact_id',
@@ -48,17 +41,10 @@ class SiteController extends Controller
                 'defaultbuilding',
                 'defaultbuilding.rooms',
             ])
-            ->allowedSorts('name')
+            ->allowedSorts('id','name')
             ->defaultSort('id');
-
-        //$sites = $query->paginate($paginate);
-        $sites = $query->get();
-
-        //return $sites;
-        return $sites->paginate($paginate, 'page', $request->page);
-        //return SiteResource::collection($sites);
-
-        //return Site::all(); */
+        $sites = $query->paginate($paginate)->appends(request()->query());
+        return SiteResource::collection($sites);
     }
 
     /**

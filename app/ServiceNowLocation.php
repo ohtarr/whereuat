@@ -29,11 +29,6 @@ class ServiceNowLocation extends ServiceNowModel
 		parent::__construct($attributes);
     }
 
-    public function address()
-    {
-        return $this->hasOne('App\Address','loc_sys_id','sys_id');
-    }
-
     public function getBusinessContact()
     {
         if($this->contact)

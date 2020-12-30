@@ -244,6 +244,149 @@
                 "summary": "Get All Sites",
                 "description": "Return all Sites.",
                 "operationId": "index",
+                "parameters": [
+                    {
+                        "name": "filter[name]",
+                        "in": "query",
+                        "description": "name of site",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[address_id]",
+                        "in": "query",
+                        "description": "address_id of site",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[contact_id]",
+                        "in": "query",
+                        "description": "contact_id of site",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[loc_sys_id]",
+                        "in": "query",
+                        "description": "loc_sys_id of site",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[location_id]",
+                        "in": "query",
+                        "description": "location_id of site",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "include",
+                        "in": "query",
+                        "description": "relationships to include (select multiple)",
+                        "required": false,
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "address",
+                                    "contact",
+                                    "buildings",
+                                    "buildings.rooms",
+                                    "defaultbuilding",
+                                    "defaultbuilding.rooms"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "servicenowlocation",
+                        "in": "query",
+                        "description": "Include servicenowlocation information with Site",
+                        "required": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "boolean",
+                            "enum": ""
+                        }
+                    },
+                    {
+                        "name": "rooms",
+                        "in": "query",
+                        "description": "Include all rooms for with Site",
+                        "required": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "boolean",
+                            "enum": ""
+                        }
+                    },
+                    {
+                        "name": "contact911",
+                        "in": "query",
+                        "description": "Include contact911 information with Site",
+                        "required": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "boolean",
+                            "enum": ""
+                        }
+                    },
+                    {
+                        "name": "scopes",
+                        "in": "query",
+                        "description": "Include scopes information with Site",
+                        "required": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "boolean",
+                            "enum": ""
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Sort by selected field.  Default: ID",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "id",
+                                "name"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "paginate",
+                        "in": "query",
+                        "description": "number of records per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "pagination page to view",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "successful operation"
@@ -389,6 +532,17 @@
                         "required": true,
                         "schema": {
                             "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "location",
+                        "in": "query",
+                        "description": "Include location information with Room",
+                        "required": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "boolean",
+                            "enum": ""
                         }
                     }
                 ],

@@ -252,6 +252,137 @@ Route::apiResource('address', API\AddressController::class);
  *      tags={"SITE"},
  *      summary="Get All Sites",
  *      description="Return all Sites.",
+ * @OA\Parameter(
+ *         name="filter[name]",
+ *         in="query",
+ *         description="name of site",
+ *         required=false,
+ *         @OA\Schema(
+ *           type="string"
+ *         ),
+ *     ),
+ * @OA\Parameter(
+ *         name="filter[address_id]",
+ *         in="query",
+ *         description="address_id of site",
+ *         required=false,
+ *         @OA\Schema(
+ *           type="string"
+ *         ),
+ *     ),
+ * @OA\Parameter(
+ *         name="filter[contact_id]",
+ *         in="query",
+ *         description="contact_id of site",
+ *         required=false,
+ *         @OA\Schema(
+ *           type="string"
+ *         ),
+ *     ),
+ * @OA\Parameter(
+ *         name="filter[loc_sys_id]",
+ *         in="query",
+ *         description="loc_sys_id of site",
+ *         required=false,
+ *         @OA\Schema(
+ *           type="string"
+ *         ),
+ *     ),
+ * @OA\Parameter(
+ *         name="filter[location_id]",
+ *         in="query",
+ *         description="location_id of site",
+ *         required=false,
+ *         @OA\Schema(
+ *           type="string"
+ *         ),
+ *     ),
+ * @OA\Parameter(
+ *         name="include",
+ *         in="query",
+ *         description="relationships to include (select multiple)",
+ *         required=false,
+ *         explode=false,
+ *         @OA\Schema(
+ *           type="array",
+ *           @OA\Items(
+ *             type="string",
+ *             enum={"address","contact","buildings","buildings.rooms","defaultbuilding","defaultbuilding.rooms"}
+ *           ),
+ *         ),
+ *     ),
+ * @OA\Parameter(
+ *         name="servicenowlocation",
+ *         in="query",
+ *         description="Include servicenowlocation information with Site",
+ *         required=false,
+ *         allowEmptyValue=true,
+ *         @OA\Schema(
+ *           type="boolean",
+ *           enum=""
+ *         ),
+ *     ),
+ *  * @OA\Parameter(
+ *         name="rooms",
+ *         in="query",
+ *         description="Include all rooms for with Site",
+ *         required=false,
+ *         allowEmptyValue=true,
+ *         @OA\Schema(
+ *           type="boolean",
+ *           enum=""
+ *         ),
+ *     ),
+ *  * @OA\Parameter(
+ *         name="contact911",
+ *         in="query",
+ *         description="Include contact911 information with Site",
+ *         required=false,
+ *         allowEmptyValue=true,
+ *         @OA\Schema(
+ *           type="boolean",
+ *           enum=""
+ *         ),
+ *     ),
+ *  * @OA\Parameter(
+ *         name="scopes",
+ *         in="query",
+ *         description="Include scopes information with Site",
+ *         required=false,
+ *         allowEmptyValue=true,
+ *         @OA\Schema(
+ *           type="boolean",
+ *           enum=""
+ *         ),
+ *     ),
+ * @OA\Parameter(
+ *         name="sort",
+ *         in="query",
+ *         description="Sort by selected field.  Default: ID",
+ *         required=false,
+ *         @OA\Schema(
+ *           type="string",
+ *           enum={"id","name"}
+ *         ),
+ *     ),
+ * @OA\Parameter(
+ *         name="paginate",
+ *         in="query",
+ *         description="number of records per page",
+ *         required=false,
+ *         @OA\Schema(
+ *           type="integer"
+ *         ),
+ *     ),
+ * @OA\Parameter(
+ *         name="page",
+ *         in="query",
+ *         description="pagination page to view",
+ *         required=false,
+ *         @OA\Schema(
+ *           type="integer"
+ *         ),
+ *     ),
  *      @OA\Response(
  *          response=200,
  *          description="successful operation"
@@ -382,6 +513,17 @@ Route::apiResource('building', API\BuildingController::class);
 *              type="integer"
 *          )
 *      ),
+*      @OA\Parameter(
+*         name="location",
+*         in="query",
+*         description="Include location information with Room",
+*         required=false,
+*         allowEmptyValue=true,
+*         @OA\Schema(
+*           type="boolean",
+*           enum=""
+*         ),
+*     ),
 *      @OA\Response(
 *          response=200,
 *          description="successful operation"

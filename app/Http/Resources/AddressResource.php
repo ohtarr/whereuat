@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class RoomResource extends JsonResource
+class AddressResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,6 +17,7 @@ class RoomResource extends JsonResource
         $return = $this->getAttributes();
         if ($request->has('location')) {
             $building = $this->building;
+            //print "BLDG!";
             if($building)
             {
                 $building->address;

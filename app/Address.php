@@ -9,6 +9,8 @@ use App\TeamsCivic;
 class Address extends Model
 {
 
+    protected $appends = ['street1','street2'];
+
     //WHEREUAT_ADDRESS to SERVICENOWLOCATION field mappings
     public $addressMapping = [
         'street_number'             => 'houseNumber',
@@ -31,9 +33,54 @@ class Address extends Model
     }
 
     //RELATIONSHIP to BUILDING
-    public function buildings()
+    public function building()
     {
-        return $this->hasMany('App\Building');
+        return $this->hasOne('App\Building');
+    }
+
+    public function getStreet1Attribute()
+    {
+        $array = [
+            'street_number',
+            'predirectional',
+            'street_name',
+            'street_suffix',
+            'postdirectional',
+        ];
+        $street1 = "";
+        foreach($array as $element)
+        {
+            if($this->$element)
+            {
+                if($street1)
+                {
+                    $street1 .= " ";
+                }
+                $street1 .= $this->$element;
+            }
+        }
+        return $street1;
+    }
+
+    public function getStreet2Attribute()
+    {
+        $array = [
+            'secondary_unit_indicator',
+            'secondary_number',
+        ];
+        $street2 = "";
+        foreach($array as $element)
+        {
+            if($this->$element)
+            {
+                if($street2)
+                {
+                    $street2 .= " ";
+                }
+                $street2 .= $this->$element;
+            }
+        }
+        return $street2;
     }
 
     //retrieve TEAMS CIVIC from TEAMs.
