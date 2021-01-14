@@ -187,6 +187,179 @@
                 "summary": "Get All Addresses",
                 "description": "Return all Addresses.",
                 "operationId": "index",
+                "parameters": [
+                    {
+                        "name": "filter[street_number]",
+                        "in": "query",
+                        "description": "street number of address",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[predirectional]",
+                        "in": "query",
+                        "description": "predirectional of address",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[street_name]",
+                        "in": "query",
+                        "description": "street_name of address",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[street_suffix]",
+                        "in": "query",
+                        "description": "street_suffix of address",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[postdirectional]",
+                        "in": "query",
+                        "description": "postdirectional of address",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[secondary_unit_indicator]",
+                        "in": "query",
+                        "description": "secondary_unit_indicator of address",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[secondary_number]",
+                        "in": "query",
+                        "description": "secondary_number of address",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[city]",
+                        "in": "query",
+                        "description": "city of address",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[state]",
+                        "in": "query",
+                        "description": "state of address",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[postal_code]",
+                        "in": "query",
+                        "description": "postal_code of address",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[country]",
+                        "in": "query",
+                        "description": "country of address",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[latitude]",
+                        "in": "query",
+                        "description": "latitude of address",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[longitude]",
+                        "in": "query",
+                        "description": "longitude of address",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[teams_civic_id]",
+                        "in": "query",
+                        "description": "teams_civic_id of address",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "location",
+                        "in": "query",
+                        "description": "Include location information with Address",
+                        "required": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "boolean",
+                            "enum": ""
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Sort by selected field.  Default: ID",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "id",
+                                "city",
+                                "state",
+                                "postal_code",
+                                "country"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "paginate",
+                        "in": "query",
+                        "description": "number of records per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "pagination page to view",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "successful operation"
@@ -218,6 +391,17 @@
                         "required": true,
                         "schema": {
                             "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "location",
+                        "in": "query",
+                        "description": "Include location information with Room",
+                        "required": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "boolean",
+                            "enum": ""
                         }
                     }
                 ],
@@ -255,9 +439,9 @@
                         }
                     },
                     {
-                        "name": "filter[address_id]",
+                        "name": "filter[default_building_id]",
                         "in": "query",
-                        "description": "address_id of site",
+                        "description": "default_building_id of site",
                         "required": false,
                         "schema": {
                             "type": "string"
@@ -276,15 +460,6 @@
                         "name": "filter[loc_sys_id]",
                         "in": "query",
                         "description": "loc_sys_id of site",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "filter[location_id]",
-                        "in": "query",
-                        "description": "location_id of site",
                         "required": false,
                         "schema": {
                             "type": "string"
@@ -419,6 +594,71 @@
                         "schema": {
                             "type": "integer"
                         }
+                    },
+                    {
+                        "name": "include",
+                        "in": "query",
+                        "description": "relationships to include (select multiple)",
+                        "required": false,
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "address",
+                                    "contact",
+                                    "buildings",
+                                    "buildings.rooms",
+                                    "defaultbuilding",
+                                    "defaultbuilding.rooms"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "servicenowlocation",
+                        "in": "query",
+                        "description": "Include servicenowlocation information with Site",
+                        "required": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "boolean",
+                            "enum": ""
+                        }
+                    },
+                    {
+                        "name": "rooms",
+                        "in": "query",
+                        "description": "Include all rooms for with Site",
+                        "required": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "boolean",
+                            "enum": ""
+                        }
+                    },
+                    {
+                        "name": "contact911",
+                        "in": "query",
+                        "description": "Include contact911 information with Site",
+                        "required": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "boolean",
+                            "enum": ""
+                        }
+                    },
+                    {
+                        "name": "scopes",
+                        "in": "query",
+                        "description": "Include scopes information with Site",
+                        "required": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "boolean",
+                            "enum": ""
+                        }
                     }
                 ],
                 "responses": {
@@ -444,6 +684,143 @@
                 "summary": "Get All Buildings",
                 "description": "Return all Buildings.",
                 "operationId": "index",
+                "parameters": [
+                    {
+                        "name": "filter[name]",
+                        "in": "query",
+                        "description": "name of building",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[description]",
+                        "in": "query",
+                        "description": "description of building",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[latitude]",
+                        "in": "query",
+                        "description": "latitude of building",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[longitude]",
+                        "in": "query",
+                        "description": "longitude of building",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[site_id]",
+                        "in": "query",
+                        "description": "site_id of building",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "filter[address_id]",
+                        "in": "query",
+                        "description": "address_id of building",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "filter[contact_id]",
+                        "in": "query",
+                        "description": "contact_id of building",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "filter[default_room_id]",
+                        "in": "query",
+                        "description": "default_room_id of building",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "include",
+                        "in": "query",
+                        "description": "relationships to include (select multiple)",
+                        "required": false,
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "site",
+                                    "rooms",
+                                    "defaultRoom"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "address",
+                        "in": "query",
+                        "description": "Include address information with Building",
+                        "required": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "boolean",
+                            "enum": ""
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Sort by selected field.  Default: ID",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "id",
+                                "name",
+                                "description",
+                                "latitude",
+                                "longitude"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "paginate",
+                        "in": "query",
+                        "description": "number of records per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "pagination page to view",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "successful operation"
@@ -606,6 +983,241 @@
                         "schema": {
                             "type": "boolean",
                             "enum": ""
+                        }
+                    },
+                    {
+                        "name": "paginate",
+                        "in": "query",
+                        "description": "number of records per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "pagination page to view",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key_security_example": []
+                    }
+                ]
+            }
+        },
+        "/api/ap": {
+            "get": {
+                "tags": [
+                    "AP"
+                ],
+                "summary": "Get All APs",
+                "description": "Return all APs.",
+                "operationId": "index",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name of AP",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "model",
+                        "in": "query",
+                        "description": "model of AP",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "serial",
+                        "in": "query",
+                        "description": "serial of AP",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "mac",
+                        "in": "query",
+                        "description": "mac of AP",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "ip",
+                        "in": "query",
+                        "description": "ip of AP",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "wlc",
+                        "in": "query",
+                        "description": "wlc of AP",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "group",
+                        "in": "query",
+                        "description": "group of AP",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "flags",
+                        "in": "query",
+                        "description": "flags of AP",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status of AP",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "neighbor_name",
+                        "in": "query",
+                        "description": "name of AP Neighbor",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "neighbor_ip",
+                        "in": "query",
+                        "description": "ip of AP Neighbor",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "neighbor_local_interface",
+                        "in": "query",
+                        "description": "local_interface of AP",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "neighbor_remote_interface",
+                        "in": "query",
+                        "description": "remote_interface of AP Neighbor",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "bssids_bssid",
+                        "in": "query",
+                        "description": "search for APs with a specific bssid (MAC ADDRESS)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "bssids_essid",
+                        "in": "query",
+                        "description": "search for APs with a specific essid (SSID)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "bssids_phy",
+                        "in": "query",
+                        "description": "search for APs with a specific radio type (a-VHT,g-HT)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "bssids_channel",
+                        "in": "query",
+                        "description": "search for APs with a specific channel (1,144)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "bssids_eirp",
+                        "in": "query",
+                        "description": "search for APs with a specific eirp (12.0, 15.0)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "neighbor",
+                        "in": "query",
+                        "description": "Include neighbor information for AP",
+                        "required": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "bssids",
+                        "in": "query",
+                        "description": "Include bssid information for AP",
+                        "required": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "location",
+                        "in": "query",
+                        "description": "Include physical location information for AP",
+                        "required": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "boolean"
                         }
                     },
                     {
