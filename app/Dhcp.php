@@ -7,10 +7,16 @@ use GuzzleHttp\Client as GuzzleHttpClient;
 use App\Site;
 use App\TeamsSubnet;
 use IPv4\SubnetCalculator as NetCalc;
+use App\Collections\DhcpCollection;
 
 class Dhcp extends Model
 {
     protected $guarded =[];
+
+    public function newCollection(array $models = [])
+    { 
+       return new DhcpCollection($models); 
+    } 
 
     public static function all($columns = [])
     {
@@ -24,7 +30,7 @@ class Dhcp extends Model
             $object = self::make($item);
             $scopes[] = $object;
         }
-        return collect($scopes);
+        return new DhcpCollection($scopes);
     }
 
     public static function find($scopeID)

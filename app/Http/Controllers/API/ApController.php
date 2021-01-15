@@ -4,8 +4,6 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Spatie\QueryBuilder\QueryBuilder;
-use Spatie\QueryBuilder\Filter;
 use App\Ap;
 use App\Http\Resources\ApResource;
 use App\Search\ApSearch;
@@ -17,7 +15,7 @@ class ApController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(request $request)
+    public function index(Request $request)
     {
         if($request->paginate)
         {

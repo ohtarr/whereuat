@@ -16,16 +16,25 @@
                 "operationId": "index",
                 "parameters": [
                     {
-                        "name": "filter[ip]",
+                        "name": "scopeid",
                         "in": "query",
-                        "description": "IP address in scope",
+                        "description": "scopeid of DHCP Scope",
                         "required": false,
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "name": "filter[name]",
+                        "name": "subnetmask",
+                        "in": "query",
+                        "description": "subnetmask of DHCP Scope",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
                         "in": "query",
                         "description": "name of DHCP Scope",
                         "required": false,
@@ -34,18 +43,18 @@
                         }
                     },
                     {
-                        "name": "filter[description]",
+                        "name": "state",
                         "in": "query",
-                        "description": "description of DHCP Scope",
+                        "description": "state of DHCP Scope",
                         "required": false,
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "name": "filter[scopeid]",
+                        "name": "description",
                         "in": "query",
-                        "description": "scopeid of DHCP Scope",
+                        "description": "description of DHCP Scope",
                         "required": false,
                         "schema": {
                             "type": "string"

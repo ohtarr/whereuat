@@ -35,16 +35,25 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
  *     summary="Get All DHCP Scopes",
  *     description="Return all DHCP Scopes.",
  *     @OA\Parameter(
- *         name="filter[ip]",
+ *         name="scopeid",
  *         in="query",
- *         description="IP address in scope",
+ *         description="scopeid of DHCP Scope",
  *         required=false,
  *         @OA\Schema(
  *             type="string"
  *         ),
  *     ),
  *     @OA\Parameter(
- *         name="filter[name]",
+ *         name="subnetmask",
+ *         in="query",
+ *         description="subnetmask of DHCP Scope",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="string"
+ *         ),
+ *     ),
+ *     @OA\Parameter(
+ *         name="name",
  *         in="query",
  *         description="name of DHCP Scope",
  *         required=false,
@@ -53,18 +62,18 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
  *         ),
  *     ),
  *     @OA\Parameter(
- *         name="filter[description]",
+ *         name="state",
  *         in="query",
- *         description="description of DHCP Scope",
+ *         description="state of DHCP Scope",
  *         required=false,
  *         @OA\Schema(
  *             type="string"
  *         ),
  *     ),
  *     @OA\Parameter(
- *         name="filter[scopeid]",
+ *         name="description",
  *         in="query",
- *         description="scopeid of DHCP Scope",
+ *         description="description of DHCP Scope",
  *         required=false,
  *         @OA\Schema(
  *             type="string"

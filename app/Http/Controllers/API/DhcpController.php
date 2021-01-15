@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Dhcp;
 use Illuminate\Http\Request;
 use App\Http\Resources\DhcpResource;
+use App\Search\DhcpSearch;
 
 class DhcpController extends Controller
 {
@@ -16,7 +17,6 @@ class DhcpController extends Controller
      */
     public function index(Request $request)
     {
-        $returndhcp = Dhcp::all();
         if($request->paginate)
         {
             $paginate = $request->paginate;
@@ -24,41 +24,9 @@ class DhcpController extends Controller
             $paginate = env("DEFAULT_PAGINATION");
         }
 
-        if($request->has('filter.ip'))
-        {
-            $scope = Dhcp::findScope($request->filter['ip']);
-            $returndhcp = collect([$scope]);
-            //$returndhcp = $scope;
-            //print_r($returndhcp);
-        }
+        $return = DhcpSearch::apply($request);
 
-        if($request->has('filter.name'))
-        {
-            $name = $request->filter['name'];
-            $returndhcp = $returndhcp->filter(function ($item) use ($name) {
-                return false !== stripos(strtolower($item->name), strtolower($name));
-            });
-        }
-
-        if($request->has('filter.description'))
-        {
-            $description = $request->filter['description'];
-            $returndhcp = $returndhcp->filter(function ($item) use ($description) {
-                return false !== stripos(strtolower($item->description), strtolower($description));
-            });
-        }
-
-        if($request->has('filter.scopeid'))
-        {
-            $scopeid = $request->filter['scopeid'];
-            $returndhcp = $returndhcp->filter(function ($item) use ($scopeid) {
-                return false !== stripos(strtolower($item->scopeID), strtolower($scopeid));
-            });
-        }
-
-        //$scopes = Dhcp::all()->paginate($paginate, 'page', $request->page);
-        //return new DhcpCollection($scopes);
-        return DhcpResource::collection($returndhcp)->paginate($paginate, 'page', $request->page);
+        return DhcpResource::collection($return)->paginate($paginate, 'page', $request->page)->appends(request()->query());
     }
 
     /**

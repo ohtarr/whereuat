@@ -30,10 +30,13 @@ class DhcpResource extends JsonResource
         {
             $site = $this->site;
             if($site)
-            {
-                $site['address'] = $this->site->address;
+            {                
+                if($site->defaultBuilding)
+                {
+                    $site->defaultBuilding->append('address');
+                }
+                $return['site'] = $site;
             }
-            $return['site'] = $site;
         }
 
         return $return;

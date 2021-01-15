@@ -34,6 +34,7 @@ class ApResource extends JsonResource
                 $room->building;
                 $room->building->site;
                 $room->building->address = $room->building->address;
+                $room->building->site->unsetRelation('default_building');
                 $return['room'] = $room;
             }
         }
