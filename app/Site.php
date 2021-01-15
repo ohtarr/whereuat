@@ -14,12 +14,7 @@ class Site extends Model
 {
     public $loc;
 
-    protected $appends = [
-        //'servicenowlocation',
-        //'rooms',
-    ];
-
-    //WHEREUAT_ADDRESS to SERVICENOWLOCATION field mappings
+/*     //WHEREUAT_ADDRESS to SERVICENOWLOCATION field mappings
     public $addressMapping = [
         'street_number'             => 'u_street_number',
         'predirectional'            => 'u_street_predirectional',
@@ -34,16 +29,26 @@ class Site extends Model
         'country'                   => 'country',
         'latitude'                  => 'latitude',
         'longitude'                 => 'longitude',
-    ];
+    ]; */
 
-    public function address()
+/*     public function address()
     {
         return $this->belongsTo('App\Address');
+    } */
+
+    public function getAddressAttribute()
+    {
+        return $this->defaultBuilding->address;
     }
 
-    public function contact()
+/*     public function contact()
     {
         return $this->belongsTo('App\Contact');
+    } */
+
+    public function getContactAttribute()
+    {
+        return $this->defaultBuilding->contact;
     }
 
     public function buildings()
@@ -221,8 +226,9 @@ class Site extends Model
         $contact->phone = preg_replace('/\D+/', '', $econtact->phone);
         $contact->email = $econtact->email;
         $contact->save();
-        $this->contact_id = $contact->id;
-        $this->save();
+        $defaultBuilding = $this->defaultBuilding;
+        $defaultBuilding->contact_id = $contact->id;
+        $defaultBuilding->save();
         return $contact;
     }
 
@@ -250,6 +256,11 @@ class Site extends Model
     public function createOrUpdateAddress()
     {
         $serviceNowLocation = $this->getServiceNowLocation();
+        $defaultBuilding = $this->defaultBuilding;
+        if(!$defaultBuilding)
+        {
+            return null;
+        }
         if($serviceNowLocation)
         {
             if($this->address)
@@ -258,14 +269,14 @@ class Site extends Model
             } else {
                 $address = new Address;
             }
-            foreach($this->addressMapping as $addressKey => $snowKey)
+            foreach($address->snowAddressMapping as $addressKey => $snowKey)
             {
                 $address->$addressKey = $serviceNowLocation->$snowKey;
             }
             $address->save();
 
-            $this->address_id = $address->id;
-            $this->save();
+            $defaultBuilding->address_id = $address->id;
+            $defaultBuilding->save();
 
             return $address;
         }
@@ -287,7 +298,7 @@ class Site extends Model
 
     public function addressIsSynced()
     {
-        $address = $this->getAddress();
+        $address = $this->address;
         $snowloc = $this->getServiceNowLocation();
         if(!$address || !$snowloc)
         {
@@ -295,7 +306,7 @@ class Site extends Model
         }
         $matches = true;
 
-        foreach($this->addressMapping as $addressKey => $snowKey)
+        foreach($address->snowAddressMapping as $addressKey => $snowKey)
         {
             if($address->$addressKey != $snowloc->$snowKey)
             {

@@ -10,14 +10,16 @@ use App\Address;
 class Building extends Model
 {
 
+    protected $hidden = ['buildingAddress'];
+
     public function site()
     {
         return $this->belongsTo('App\Site');
     }
 
-    public function address()
+    public function buildingAddress()
     {
-        return $this->belongsTo('App\Address');
+        return $this->belongsTo('App\Address','address_id','id');
     }
     
     public function contact()
@@ -35,17 +37,25 @@ class Building extends Model
         return $this->hasOne('App\Room','id','default_room_id');
     }
 
+    public function getAddressAttribute()
+    {
+        return $this->getAddress();
+    }
+
     public function getAddress()
     {
-        $bldgaddress = $this->address;
-        if($bldgaddress)
+        if($this->buildingAddress)
         {
-            return $bldgaddress;
+            return $this->buildingAddress;
         }
-        $siteaddress = $this->site->address;
-        if($siteaddress)
+        return $this->site->defaultBuilding->address;
+    }
+
+    public function isDefaultBuilding()
+    {
+        if($this->site->defaultBuilding->id == $this->id)
         {
-            return $siteaddress;
+            return true;
         }
     }
 

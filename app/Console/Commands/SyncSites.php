@@ -55,6 +55,13 @@ class SyncSites extends Command
             print "**********************************************\n";
             print "Syncing Site {$site->name} with ID {$site->id}...\n";
 
+            $defaultBuilding = $site->syncDefaultBuilding();
+            if(!$defaultBuilding)
+            {
+                print "Unable to obtain/create DEFAULT BUILDING for site {$site->name}, skipping site...\n";
+                continue;
+            }
+
             $address = $site->syncAddress();
             if(!$address)
             {
@@ -62,12 +69,6 @@ class SyncSites extends Command
                 continue;                
             }
 
-            $defaultBuilding = $site->syncDefaultBuilding();
-            if(!$defaultBuilding)
-            {
-                print "Unable to obtain/create DEFAULT BUILDING for site {$site->name}, skipping site...\n";
-                continue;
-            }
             try{
                 $contact = $site->syncContact();
             } catch(\Exception $e) {

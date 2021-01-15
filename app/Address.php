@@ -12,7 +12,7 @@ class Address extends Model
     protected $appends = ['street1','street2'];
 
     //WHEREUAT_ADDRESS to SERVICENOWLOCATION field mappings
-    public $addressMapping = [
+    public $teamsAddressMapping = [
         'street_number'             => 'houseNumber',
         'predirectional'            => 'preDirectional',
         'street_name'               => 'streetName',
@@ -26,11 +26,28 @@ class Address extends Model
         'longitude'                 => 'longitude',
     ];
 
-    //RELATIONSHIP to SITE
+    //WHEREUAT_ADDRESS to SERVICENOWLOCATION field mappings
+    public $snowAddressMapping = [
+        'street_number'             => 'u_street_number',
+        'predirectional'            => 'u_street_predirectional',
+        'street_name'               => 'u_street_name',
+        'street_suffix'             => 'u_street_suffix',
+        'postdirectional'           => 'u_street_postdirectional',
+        'secondary_unit_indicator'  => 'u_secondary_unit_indicator',
+        'secondary_number'          => 'u_secondary_number',
+        'city'                      => 'city',
+        'state'                     => 'state',
+        'postal_code'               => 'zip',
+        'country'                   => 'country',
+        'latitude'                  => 'latitude',
+        'longitude'                 => 'longitude',
+    ];
+
+/*     //RELATIONSHIP to SITE
     public function site()
     {
         return $this->hasOne('App\Site');
-    }
+    } */
 
     //RELATIONSHIP to BUILDING
     public function building()
@@ -133,7 +150,7 @@ class Address extends Model
         }
 
         $matches = true;
-        foreach($this->addressMapping as $addressKey => $teamsKey)
+        foreach($this->teamsAddressMapping as $addressKey => $teamsKey)
         {
             if($addressKey == "country")
             {
@@ -158,7 +175,7 @@ class Address extends Model
         $civic = new TeamsCivic;
         $civic->companyName = $this->getSite()->name;
         $civic->description = $this->getSite()->name;
-        foreach($this->addressMapping as $addressKey => $teamsKey)
+        foreach($this->teamsAddressMapping as $addressKey => $teamsKey)
         {
             $civic->$teamsKey = $this->$addressKey;
         }
