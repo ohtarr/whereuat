@@ -11,6 +11,9 @@ use App\Collections\ApCollection;
 
 class Ap extends Model
 {
+    protected $primaryKey = 'mac'; // or null
+    public $incrementing = false;
+
     protected $guarded =[];
 
     public $cache;
@@ -123,11 +126,6 @@ class Ap extends Model
         return Site::where("name",$this->getSiteCode())->first();
     }
 
-    public function getSiteAttribute()
-    {
-        return $this->getSite();
-    }
-
     public function getRoom()
     {
         $room = null;
@@ -148,11 +146,6 @@ class Ap extends Model
         }
 
         return $room;
-    }
-
-    public function getRoomAttribute()
-    {
-        return $this->getRoom();
     }
 
     public function getTeamsLocationId()
@@ -223,6 +216,42 @@ class Ap extends Model
         $mac = str_replace(".", '', $mac);
         $mac = strtolower($mac);
         return $mac;
+    }
+
+    public function withSite()
+    {
+        $site = $this->getSite();
+        if($site)
+        {
+            $site->defaultbuilding = $site->defaultBuilding;
+            $site->defaultbuilding->address = $site->defaultBuilding->address;
+            $this->site = $site;
+        }
+        return $this;
+    }
+
+    public function withLocation()
+    {
+        $room = $this->getRoom();
+        if($room)
+        {
+            $room->building->site;
+            $room->building->address;
+            $this->room = $room;
+        }
+        return $this;
+    }
+
+    public function withoutNeighbor()
+    {
+        unset($this->neighbor);
+        return $this;
+    }
+
+    public function withoutBssids()
+    {
+        unset($this->bssids);
+        return $this;
     }
 
 }

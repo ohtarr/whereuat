@@ -3,20 +3,34 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Room;
+use App\Room as Model;
 use Illuminate\Http\Request;
-use App\Http\Resources\RoomResource;
+use App\Http\Resources\RoomResource as Resource;
+use App\Http\Resources\RoomCollection as ResourceCollection;
+use App\Queries\RoomQuery as Query;
 
 class RoomController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(request $request)
     {
-        return Room::all();
+         //Apply proper queries and retrieve a Collection object.
+         $collection = Query::apply($request);
+         //Paginate the collection and include all pertinent links.
+         $paginator = $collection->paginate($request->paginate ?: env('DEFAULT_PAGINATION'), 'page', $request->page)
+             ->appends(request()->query());
+         //Save the Collection to a tmp variable
+         $tmp = $paginator->getCollection();
+         //Create a new ResourceCollection object.
+         $resource = new ResourceCollection($paginator);
+         //Overwrite the resource collection so that it is proper type of Collection Type;
+         $resource->collection = $tmp;
+         return $resource;
     }
 
     /**
@@ -33,22 +47,25 @@ class RoomController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Room  $room
+     * @param  id  $id
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function show(Room $room)
+    public function show(Request $request, $id)
     {
-        return new RoomResource($room);
+        $object = Model::find($id);
+        $collection = Query::apply($request,$object);
+        return new Resource($collection->first());
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Room  $room
+     * @param  id  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Room $room)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -56,10 +73,10 @@ class RoomController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Room  $room
+     * @param  id  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Room $room)
+    public function destroy($id)
     {
         //
     }

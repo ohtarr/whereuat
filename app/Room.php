@@ -4,9 +4,15 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\TeamsLocation;
+use App\Collections\RoomCollection;
 
 class Room extends Model
 {
+    public function newCollection(array $models = []) 
+    { 
+       return new RoomCollection($models); 
+    }
+
     public function building()
     {
         return $this->belongsTo('App\Building');

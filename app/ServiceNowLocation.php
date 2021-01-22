@@ -120,18 +120,6 @@ class ServiceNowLocation extends ServiceNowModel
         {
             $valid = 0;
         }
-/*         if(!$this->u_street_number)
-        {
-            $valid = 0;
-        }
-        if(!$this->u_street_name)
-        {
-            $valid = 0;
-        }
-        if(!$this->u_street_suffix)
-        {
-            $valid = 0;
-        } */
         if(!$this->country)
         {
             $valid = 0;

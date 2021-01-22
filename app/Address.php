@@ -5,11 +5,17 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\ServiceNowLocation;
 use App\TeamsCivic;
+use App\Collections\AddressCollection;
 
 class Address extends Model
 {
 
     protected $appends = ['street1','street2'];
+
+    public function newCollection(array $models = []) 
+    { 
+       return new AddressCollection($models); 
+    }
 
     //WHEREUAT_ADDRESS to SERVICENOWLOCATION field mappings
     public $teamsAddressMapping = [
@@ -42,12 +48,6 @@ class Address extends Model
         'latitude'                  => 'latitude',
         'longitude'                 => 'longitude',
     ];
-
-/*     //RELATIONSHIP to SITE
-    public function site()
-    {
-        return $this->hasOne('App\Site');
-    } */
 
     //RELATIONSHIP to BUILDING
     public function building()

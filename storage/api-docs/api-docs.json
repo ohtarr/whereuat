@@ -61,6 +61,52 @@
                         }
                     },
                     {
+                        "name": "reservations_ipaddress",
+                        "in": "query",
+                        "description": "ipaddress of reservation in DHCP Scope",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "reservations_clientid",
+                        "in": "query",
+                        "description": "clientid (MAC ADDRESS) of reservation in DHCP Scope",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "reservations_name",
+                        "in": "query",
+                        "description": "name of reservation in DHCP Scope",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "reservations_description",
+                        "in": "query",
+                        "description": "description of reservation in DHCP Scope",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "options",
+                        "in": "query",
+                        "description": "Include options for DHCP Scope",
+                        "required": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
                         "name": "reservations",
                         "in": "query",
                         "description": "Include reservations for DHCP Scope",
@@ -324,14 +370,21 @@
                         }
                     },
                     {
-                        "name": "location",
+                        "name": "include",
                         "in": "query",
-                        "description": "Include location information with Address",
+                        "description": "relationships to include (select multiple)",
                         "required": false,
-                        "allowEmptyValue": true,
+                        "explode": false,
                         "schema": {
-                            "type": "boolean",
-                            "enum": ""
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "building",
+                                    "building.site",
+                                    "building.rooms"
+                                ]
+                            }
                         }
                     },
                     {
@@ -403,14 +456,21 @@
                         }
                     },
                     {
-                        "name": "location",
+                        "name": "include",
                         "in": "query",
-                        "description": "Include location information with Room",
+                        "description": "relationships to include (select multiple)",
                         "required": false,
-                        "allowEmptyValue": true,
+                        "explode": false,
                         "schema": {
-                            "type": "boolean",
-                            "enum": ""
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "building",
+                                    "building.site",
+                                    "building.rooms"
+                                ]
+                            }
                         }
                     }
                 ],
@@ -457,15 +517,6 @@
                         }
                     },
                     {
-                        "name": "filter[contact_id]",
-                        "in": "query",
-                        "description": "contact_id of site",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
                         "name": "filter[loc_sys_id]",
                         "in": "query",
                         "description": "loc_sys_id of site",
@@ -485,14 +536,26 @@
                             "items": {
                                 "type": "string",
                                 "enum": [
-                                    "address",
-                                    "contact",
                                     "buildings",
                                     "buildings.rooms",
                                     "defaultbuilding",
-                                    "defaultbuilding.rooms"
+                                    "defaultbuilding.address",
+                                    "defaultbuilding.rooms",
+                                    "defaultbuilding.contact",
+                                    "defaultbuilding.defaultroom"
                                 ]
                             }
+                        }
+                    },
+                    {
+                        "name": "address",
+                        "in": "query",
+                        "description": "Include address information with Site",
+                        "required": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "boolean",
+                            "enum": ""
                         }
                     },
                     {
@@ -500,7 +563,7 @@
                         "in": "query",
                         "description": "Include servicenowlocation information with Site",
                         "required": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "boolean",
                             "enum": ""
@@ -511,7 +574,7 @@
                         "in": "query",
                         "description": "Include all rooms for with Site",
                         "required": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "boolean",
                             "enum": ""
@@ -522,7 +585,7 @@
                         "in": "query",
                         "description": "Include contact911 information with Site",
                         "required": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "boolean",
                             "enum": ""
@@ -533,10 +596,13 @@
                         "in": "query",
                         "description": "Include scopes information with Site",
                         "required": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
-                            "type": "boolean",
-                            "enum": ""
+                            "type": "string",
+                            "enum": [
+                                "true",
+                                "full"
+                            ]
                         }
                     },
                     {
@@ -615,12 +681,13 @@
                             "items": {
                                 "type": "string",
                                 "enum": [
-                                    "address",
-                                    "contact",
                                     "buildings",
                                     "buildings.rooms",
                                     "defaultbuilding",
-                                    "defaultbuilding.rooms"
+                                    "defaultbuilding.address",
+                                    "defaultbuilding.rooms",
+                                    "defaultbuilding.contact",
+                                    "defaultbuilding.defaultroom"
                                 ]
                             }
                         }
@@ -630,29 +697,7 @@
                         "in": "query",
                         "description": "Include servicenowlocation information with Site",
                         "required": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "boolean",
-                            "enum": ""
-                        }
-                    },
-                    {
-                        "name": "rooms",
-                        "in": "query",
-                        "description": "Include all rooms for with Site",
-                        "required": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "boolean",
-                            "enum": ""
-                        }
-                    },
-                    {
-                        "name": "contact911",
-                        "in": "query",
-                        "description": "Include contact911 information with Site",
-                        "required": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "boolean",
                             "enum": ""
@@ -663,7 +708,32 @@
                         "in": "query",
                         "description": "Include scopes information with Site",
                         "required": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "true",
+                                "full"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "rooms",
+                        "in": "query",
+                        "description": "Include all rooms for with Site",
+                        "required": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "boolean",
+                            "enum": ""
+                        }
+                    },
+                    {
+                        "name": "address",
+                        "in": "query",
+                        "description": "Include address information with Site",
+                        "required": false,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "boolean",
                             "enum": ""
@@ -740,9 +810,9 @@
                         }
                     },
                     {
-                        "name": "filter[address_id]",
+                        "name": "filter[default_room_id]",
                         "in": "query",
-                        "description": "address_id of building",
+                        "description": "default_room_id of building",
                         "required": false,
                         "schema": {
                             "type": "integer"
@@ -752,15 +822,6 @@
                         "name": "filter[contact_id]",
                         "in": "query",
                         "description": "contact_id of building",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "filter[default_room_id]",
-                        "in": "query",
-                        "description": "default_room_id of building",
                         "required": false,
                         "schema": {
                             "type": "integer"
@@ -778,21 +839,12 @@
                                 "type": "string",
                                 "enum": [
                                     "site",
+                                    "address",
+                                    "contact",
                                     "rooms",
                                     "defaultRoom"
                                 ]
                             }
-                        }
-                    },
-                    {
-                        "name": "address",
-                        "in": "query",
-                        "description": "Include address information with Building",
-                        "required": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "boolean",
-                            "enum": ""
                         }
                     },
                     {
@@ -862,6 +914,26 @@
                         "schema": {
                             "type": "integer"
                         }
+                    },
+                    {
+                        "name": "include",
+                        "in": "query",
+                        "description": "relationships to include (select multiple)",
+                        "required": false,
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "site",
+                                    "address",
+                                    "contact",
+                                    "rooms",
+                                    "defaultRoom"
+                                ]
+                            }
+                        }
                     }
                 ],
                 "responses": {
@@ -887,6 +959,85 @@
                 "summary": "Get All Rooms",
                 "description": "Return all Rooms.",
                 "operationId": "index",
+                "parameters": [
+                    {
+                        "name": "filter[name]",
+                        "in": "query",
+                        "description": "name of building",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[description]",
+                        "in": "query",
+                        "description": "description of building",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[building_id]",
+                        "in": "query",
+                        "description": "building_id of building",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "include",
+                        "in": "query",
+                        "description": "relationships to include (select multiple)",
+                        "required": false,
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "building",
+                                    "building.address",
+                                    "building.site"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Sort by selected field.  Default: ID",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "id",
+                                "name",
+                                "description"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "paginate",
+                        "in": "query",
+                        "description": "number of records per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "pagination page to view",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "successful operation"
@@ -921,14 +1072,21 @@
                         }
                     },
                     {
-                        "name": "location",
+                        "name": "include",
                         "in": "query",
-                        "description": "Include location information with Room",
+                        "description": "relationships to include (select multiple)",
                         "required": false,
-                        "allowEmptyValue": true,
+                        "explode": false,
                         "schema": {
-                            "type": "boolean",
-                            "enum": ""
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "building",
+                                    "building.address",
+                                    "building.site"
+                                ]
+                            }
                         }
                     }
                 ],
@@ -1200,9 +1358,9 @@
                         }
                     },
                     {
-                        "name": "neighbor",
+                        "name": "neighbors",
                         "in": "query",
-                        "description": "Include neighbor information for AP",
+                        "description": "Include neighbor information for APs",
                         "required": false,
                         "allowEmptyValue": true,
                         "schema": {
@@ -1212,7 +1370,7 @@
                     {
                         "name": "bssids",
                         "in": "query",
-                        "description": "Include bssid information for AP",
+                        "description": "Include bssid information for APs",
                         "required": false,
                         "allowEmptyValue": true,
                         "schema": {
@@ -1222,7 +1380,7 @@
                     {
                         "name": "location",
                         "in": "query",
-                        "description": "Include physical location information for AP",
+                        "description": "Include physical location information for APs",
                         "required": false,
                         "allowEmptyValue": true,
                         "schema": {
@@ -1245,6 +1403,70 @@
                         "required": false,
                         "schema": {
                             "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key_security_example": []
+                    }
+                ]
+            }
+        },
+        "/api/ap/{mac}": {
+            "get": {
+                "tags": [
+                    "AP"
+                ],
+                "summary": "Get AP info",
+                "description": "Returns AP information",
+                "operationId": "show",
+                "parameters": [
+                    {
+                        "name": "mac",
+                        "in": "path",
+                        "description": "AP MAC",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "neighbor",
+                        "in": "query",
+                        "description": "Include neighbor information for APs",
+                        "required": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "bssids",
+                        "in": "query",
+                        "description": "Include bssid information for APs",
+                        "required": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "location",
+                        "in": "query",
+                        "description": "Include physical location information for APs",
+                        "required": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "boolean"
                         }
                     }
                 ],

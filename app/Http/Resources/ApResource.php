@@ -14,31 +14,21 @@ class ApResource extends JsonResource
      */
     public function toArray($request)
     {
-        $return = $this->getAttributes();
-
         if(!$request->has('neighbor'))
         {
-            unset($return['neighbor']);
+            $this->withoutNeighbor();
         }
 
         if(!$request->has('bssids'))
         {
-            unset($return['bssids']);
+            $this->withoutBssids();
         }
 
         if($request->has('location'))
         {
-            $room = $this->room;
-            if($room)
-            {
-                $room->building;
-                $room->building->site;
-                $room->building->address = $room->building->address;
-                $room->building->site->unsetRelation('default_building');
-                $return['room'] = $room;
-            }
+            $this->withLocation();
         }
 
-        return $return;
+        return $this->getAttributes();
     }
 }

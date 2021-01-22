@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Search;
+namespace App\Queries;
 
-use App\Ap;
 use Illuminate\Http\Request;
+use App\Ap;
 
-class ApSearch
+class ApQuery
 {
     public static function apply(Request $request)
     {
@@ -36,9 +36,9 @@ class ApSearch
         {
             foreach($allowed as $akey => $method)
             {
-                if($akey == $key)
+                if(strtolower($akey) == strtolower($key))
                 {
-                    $return = $return->$method($key,$value);
+                    $return = $return->$method($akey,$value);
                 }
             }
         }

@@ -11,6 +11,9 @@ use App\Collections\DhcpCollection;
 
 class Dhcp extends Model
 {
+    protected $primaryKey = 'scopeID'; // or null
+    public $incrementing = false;
+
     protected $guarded =[];
 
     public function newCollection(array $models = [])
@@ -59,7 +62,7 @@ class Dhcp extends Model
         }
     }
 
-    public function getSiteAttribute()
+    public function getSite()
     {
         return $this->findSite();
     }
@@ -74,7 +77,7 @@ class Dhcp extends Model
                 $scopes[] = $scope;
             }
         }
-        return collect($scopes);
+        return new DhcpCollection($scopes);
     }
 
     public function createTeamsSubnet()
@@ -142,9 +145,28 @@ class Dhcp extends Model
         $site = $this->findSite();
         if($site)
         {
-            $site->load('address');
+            $site->defaultbuilding = $site->defaultBuilding;
+            $site->defaultbuilding->address = $site->defaultBuilding->address;
             $this->site = $site;
         }
+        return $this;
+    }
+
+    public function withoutReservations()
+    {
+        unset($this->reservations);
+        return $this;
+    }
+
+    public function withoutFailover()
+    {
+        unset($this->failover);
+        return $this;
+    }
+
+    public function withoutOptions()
+    {
+        unset($this->dhcpOptions);
         return $this;
     }
 

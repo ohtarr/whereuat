@@ -20,7 +20,7 @@ class BssidResource extends JsonResource
             if($room)
             {
                 //$room->building;
-                $room->building->address;
+                $room->building;
                 $return['room'] = $room;
                 $address = $room->building->getAddress();
                 $room->building->unsetRelation('address'); 

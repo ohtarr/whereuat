@@ -3,48 +3,34 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Site;
+use App\Site as Model;
 use Illuminate\Http\Request;
-use Spatie\QueryBuilder\QueryBuilder;
-use Spatie\QueryBuilder\Filter;
-use App\Http\Resources\SiteResource;
+use App\Queries\SiteQuery as Query;
+use App\Http\Resources\SiteResource as Resource;
+use App\Http\Resources\SiteCollection as ResourceCollection;
 
 class SiteController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function index(request $request)
     {
-        if($request->paginate)
-        {
-            $paginate = $request->paginate;
-        } else {
-            $paginate = env("DEFAULT_PAGINATION");
-        }
-
-		$query = QueryBuilder::for(Site::class)
-            ->allowedFilters([
-                'name',
-                'address_id',
-                'contact_id',
-                'loc_sys_id',
-                'location_id',
-            ])
-		    ->allowedIncludes([
-                'address',
-                'contact',
-                'buildings',
-                'buildings.rooms',
-                'defaultbuilding',
-                'defaultbuilding.rooms',
-            ])
-            ->allowedSorts('id','name')
-            ->defaultSort('id');
-        $sites = $query->paginate($paginate)->appends(request()->query());
-        return SiteResource::collection($sites);
+         //Apply proper queries and retrieve a Collection object.
+         $collection = Query::apply($request);
+         //Paginate the collection and include all pertinent links.
+         $paginator = $collection->paginate($request->paginate ?: env('DEFAULT_PAGINATION'), 'page', $request->page)
+             ->appends(request()->query());
+         //Save the Collection to a tmp variable
+         $tmp = $paginator->getCollection();
+         //Create a new ResourceCollection object.
+         $resource = new ResourceCollection($paginator);
+         //Overwrite the resource collection so that it is proper type of Collection Type;
+         $resource->collection = $tmp;
+         return $resource;
     }
 
     /**
@@ -61,22 +47,25 @@ class SiteController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Site  $site
+     * @param  id  $id
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function show(Site $site)
+    public function show(Request $request, $id)
     {
-        return $site;
+        $object = Model::find($id);
+        $collection = Query::apply($request,$object);
+        return new Resource($collection->first());
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Site  $site
+     * @param  id  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Site $site)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -84,10 +73,10 @@ class SiteController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Site  $site
+     * @param  id  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Site $site)
+    public function destroy($id)
     {
         //
     }

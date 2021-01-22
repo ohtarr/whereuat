@@ -6,20 +6,26 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use App\Room;
 use App\Address;
+use App\Collections\BuildingCollection;
 
 class Building extends Model
 {
 
-    protected $hidden = ['buildingAddress'];
+    //protected $hidden = ['Address'];
+
+    public function newCollection(array $models = []) 
+    { 
+       return new BuildingCollection($models); 
+    }
 
     public function site()
     {
         return $this->belongsTo('App\Site');
     }
 
-    public function buildingAddress()
+    public function Address()
     {
-        return $this->belongsTo('App\Address','address_id','id');
+        return $this->belongsTo('App\Address');
     }
     
     public function contact()
@@ -37,18 +43,13 @@ class Building extends Model
         return $this->hasOne('App\Room','id','default_room_id');
     }
 
-    public function getAddressAttribute()
-    {
-        return $this->getAddress();
-    }
-
     public function getAddress()
     {
-        if($this->buildingAddress)
+        if($this->Address)
         {
-            return $this->buildingAddress;
+            return $this->Address;
         }
-        return $this->site->defaultBuilding->address;
+        return $this->site->defaultBuilding->getAddress();
     }
 
     public function isDefaultBuilding()
@@ -71,7 +72,7 @@ class Building extends Model
         {
             return $bldgcontact;
         }
-        $sitecontact = $this->site->contact;
+        $sitecontact = $this->site->getContact();
         if($sitecontact)
         {
             return $sitecontact;

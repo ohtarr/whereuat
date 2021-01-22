@@ -80,6 +80,52 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
  *         ),
  *     ),
  *     @OA\Parameter(
+ *         name="reservations_ipaddress",
+ *         in="query",
+ *         description="ipaddress of reservation in DHCP Scope",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="string"
+ *         ),
+ *     ),
+ *     @OA\Parameter(
+ *         name="reservations_clientid",
+ *         in="query",
+ *         description="clientid (MAC ADDRESS) of reservation in DHCP Scope",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="string"
+ *         ),
+ *     ),
+ *     @OA\Parameter(
+ *         name="reservations_name",
+ *         in="query",
+ *         description="name of reservation in DHCP Scope",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="string"
+ *         ),
+ *     ),
+ *     @OA\Parameter(
+ *         name="reservations_description",
+ *         in="query",
+ *         description="description of reservation in DHCP Scope",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="string"
+ *         ),
+ *     ),
+ *     @OA\Parameter(
+ *         name="options",
+ *         in="query",
+ *         description="Include options for DHCP Scope",
+ *         required=false,
+ *         allowEmptyValue=true,
+ *         @OA\Schema(
+ *             type="boolean"
+ *         ),
+ *     ),
+ *     @OA\Parameter(
  *         name="reservations",
  *         in="query",
  *         description="Include reservations for DHCP Scope",
@@ -336,15 +382,18 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
  *           type="string"
  *         ),
  *     ),
- *      @OA\Parameter(
- *         name="location",
+ *     @OA\Parameter(
+ *         name="include",
  *         in="query",
- *         description="Include location information with Address",
+ *         description="relationships to include (select multiple)",
  *         required=false,
- *         allowEmptyValue=true,
+ *         explode=false,
  *         @OA\Schema(
- *           type="boolean",
- *           enum=""
+ *           type="array",
+ *           @OA\Items(
+ *             type="string",
+ *             enum={"building","building.site","building.rooms"}
+ *           ),
  *         ),
  *     ),
  * @OA\Parameter(
@@ -404,15 +453,18 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 *              type="integer"
 *          )
 *      ),
-*      @OA\Parameter(
-*         name="location",
+*     @OA\Parameter(
+*         name="include",
 *         in="query",
-*         description="Include location information with Room",
+*         description="relationships to include (select multiple)",
 *         required=false,
-*         allowEmptyValue=true,
+*         explode=false,
 *         @OA\Schema(
-*           type="boolean",
-*           enum=""
+*           type="array",
+*           @OA\Items(
+*             type="string",
+*             enum={"building","building.site","building.rooms"}
+*           ),
 *         ),
 *     ),
 *      @OA\Response(
@@ -456,15 +508,6 @@ Route::apiResource('address', API\AddressController::class);
  *         ),
  *     ),
  *     @OA\Parameter(
- *         name="filter[contact_id]",
- *         in="query",
- *         description="contact_id of site",
- *         required=false,
- *         @OA\Schema(
- *           type="string"
- *         ),
- *     ),
- *     @OA\Parameter(
  *         name="filter[loc_sys_id]",
  *         in="query",
  *         description="loc_sys_id of site",
@@ -483,8 +526,19 @@ Route::apiResource('address', API\AddressController::class);
  *           type="array",
  *           @OA\Items(
  *             type="string",
- *             enum={"address","contact","buildings","buildings.rooms","defaultbuilding","defaultbuilding.rooms"}
+ *             enum={"buildings","buildings.rooms","defaultbuilding","defaultbuilding.address","defaultbuilding.rooms","defaultbuilding.contact","defaultbuilding.defaultroom"}
  *           ),
+ *         ),
+ *     ),
+ *     @OA\Parameter(
+ *         name="address",
+ *         in="query",
+ *         description="Include address information with Site",
+ *         required=false,
+ *         allowEmptyValue=false,
+ *         @OA\Schema(
+ *           type="boolean",
+ *           enum=""
  *         ),
  *     ),
  *     @OA\Parameter(
@@ -492,7 +546,7 @@ Route::apiResource('address', API\AddressController::class);
  *         in="query",
  *         description="Include servicenowlocation information with Site",
  *         required=false,
- *         allowEmptyValue=true,
+ *         allowEmptyValue=false,
  *         @OA\Schema(
  *           type="boolean",
  *           enum=""
@@ -503,7 +557,7 @@ Route::apiResource('address', API\AddressController::class);
  *         in="query",
  *         description="Include all rooms for with Site",
  *         required=false,
- *         allowEmptyValue=true,
+ *         allowEmptyValue=false,
  *         @OA\Schema(
  *           type="boolean",
  *           enum=""
@@ -514,7 +568,7 @@ Route::apiResource('address', API\AddressController::class);
  *         in="query",
  *         description="Include contact911 information with Site",
  *         required=false,
- *         allowEmptyValue=true,
+ *         allowEmptyValue=false,
  *         @OA\Schema(
  *           type="boolean",
  *           enum=""
@@ -525,10 +579,10 @@ Route::apiResource('address', API\AddressController::class);
  *         in="query",
  *         description="Include scopes information with Site",
  *         required=false,
- *         allowEmptyValue=true,
+ *         allowEmptyValue=false,
  *         @OA\Schema(
- *           type="boolean",
- *           enum=""
+ *           type="string",
+ *           enum={"true","full"}
  *         ),
  *     ),
  *     @OA\Parameter(
@@ -598,7 +652,7 @@ Route::apiResource('address', API\AddressController::class);
 *             type="array",
 *             @OA\Items(
 *                 type="string",
-*                 enum={"address","contact","buildings","buildings.rooms","defaultbuilding","defaultbuilding.rooms"}
+*                 enum={"buildings","buildings.rooms","defaultbuilding","defaultbuilding.address","defaultbuilding.rooms","defaultbuilding.contact","defaultbuilding.defaultroom"}
 *             ),
 *         ),
 *     ),
@@ -607,29 +661,7 @@ Route::apiResource('address', API\AddressController::class);
 *         in="query",
 *         description="Include servicenowlocation information with Site",
 *         required=false,
-*         allowEmptyValue=true,
-*         @OA\Schema(
-*             type="boolean",
-*             enum=""
-*         ),
-*     ),
-*     @OA\Parameter(
-*         name="rooms",
-*         in="query",
-*         description="Include all rooms for with Site",
-*         required=false,
-*         allowEmptyValue=true,
-*         @OA\Schema(
-*             type="boolean",
-*             enum=""
-*         ),
-*     ),
-*     @OA\Parameter(
-*         name="contact911",
-*         in="query",
-*         description="Include contact911 information with Site",
-*         required=false,
-*         allowEmptyValue=true,
+*         allowEmptyValue=false,
 *         @OA\Schema(
 *             type="boolean",
 *             enum=""
@@ -640,7 +672,29 @@ Route::apiResource('address', API\AddressController::class);
 *         in="query",
 *         description="Include scopes information with Site",
 *         required=false,
-*         allowEmptyValue=true,
+*         allowEmptyValue=false,
+*         @OA\Schema(
+*           type="string",
+*           enum={"true","full"}
+*         ),
+*     ),
+*     @OA\Parameter(
+*         name="rooms",
+*         in="query",
+*         description="Include all rooms for with Site",
+*         required=false,
+*         allowEmptyValue=false,
+*         @OA\Schema(
+*             type="boolean",
+*             enum=""
+*         ),
+*     ),
+*     @OA\Parameter(
+*         name="address",
+*         in="query",
+*         description="Include address information with Site",
+*         required=false,
+*         allowEmptyValue=false,
 *         @OA\Schema(
 *             type="boolean",
 *             enum=""
@@ -714,9 +768,9 @@ Route::apiResource('site', API\SiteController::class);
  *         ),
  *     ),
  *     @OA\Parameter(
- *         name="filter[address_id]",
+ *         name="filter[default_room_id]",
  *         in="query",
- *         description="address_id of building",
+ *         description="default_room_id of building",
  *         required=false,
  *         @OA\Schema(
  *             type="integer"
@@ -732,15 +786,6 @@ Route::apiResource('site', API\SiteController::class);
  *         ),
  *     ),
  *     @OA\Parameter(
- *         name="filter[default_room_id]",
- *         in="query",
- *         description="default_room_id of building",
- *         required=false,
- *         @OA\Schema(
- *             type="integer"
- *         ),
- *     ),
- *     @OA\Parameter(
  *         name="include",
  *         in="query",
  *         description="relationships to include (select multiple)",
@@ -750,19 +795,8 @@ Route::apiResource('site', API\SiteController::class);
  *             type="array",
  *             @OA\Items(
  *                 type="string",
- *                 enum={"site","rooms","defaultRoom"}
+ *                 enum={"site","address","contact","rooms","defaultRoom"}
  *             ),
- *         ),
- *     ),
- *     @OA\Parameter(
- *         name="address",
- *         in="query",
- *         description="Include address information with Building",
- *         required=false,
- *         allowEmptyValue=true,
- *         @OA\Schema(
- *             type="boolean",
- *             enum=""
  *         ),
  *     ),
  *     @OA\Parameter(
@@ -822,6 +856,20 @@ Route::apiResource('site', API\SiteController::class);
 *             type="integer"
 *         )
 *     ),
+*     @OA\Parameter(
+*         name="include",
+*         in="query",
+*         description="relationships to include (select multiple)",
+*         required=false,
+*         explode=false,
+*         @OA\Schema(
+*             type="array",
+*             @OA\Items(
+*                 type="string",
+*                 enum={"site","address","contact","rooms","defaultRoom"}
+*             ),
+*         ),
+*     ),
 *     @OA\Response(
 *         response=200,
 *         description="successful operation"
@@ -846,6 +894,75 @@ Route::apiResource('building', API\BuildingController::class);
  *     tags={"ROOM"},
  *     summary="Get All Rooms",
  *     description="Return all Rooms.",
+ *     @OA\Parameter(
+ *         name="filter[name]",
+ *         in="query",
+ *         description="name of building",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="string"
+ *         ),
+ *     ),
+ *     @OA\Parameter(
+ *         name="filter[description]",
+ *         in="query",
+ *         description="description of building",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="string"
+ *         ),
+ *     ),
+ *     @OA\Parameter(
+ *         name="filter[building_id]",
+ *         in="query",
+ *         description="building_id of building",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="string"
+ *         ),
+ *     ),
+ *     @OA\Parameter(
+ *         name="include",
+ *         in="query",
+ *         description="relationships to include (select multiple)",
+ *         required=false,
+ *         explode=false,
+ *         @OA\Schema(
+ *             type="array",
+ *             @OA\Items(
+ *                 type="string",
+ *                 enum={"building","building.address","building.site"}
+ *             ),
+ *         ),
+ *     ),
+ *     @OA\Parameter(
+ *         name="sort",
+ *         in="query",
+ *         description="Sort by selected field.  Default: ID",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="string",
+ *             enum={"id","name","description"}
+ *         ),
+ *     ),
+ *     @OA\Parameter(
+ *         name="paginate",
+ *         in="query",
+ *         description="number of records per page",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="integer"
+ *         ),
+ *     ),
+ *     @OA\Parameter(
+ *         name="page",
+ *         in="query",
+ *         description="pagination page to view",
+ *         required=false,
+ *         @OA\Schema(
+ *             type="integer"
+ *         ),
+ *     ),
  *     @OA\Response(
  *         response=200,
  *         description="successful operation"
@@ -875,15 +992,18 @@ Route::apiResource('building', API\BuildingController::class);
 *              type="integer"
 *          )
 *      ),
-*      @OA\Parameter(
-*         name="location",
+*     @OA\Parameter(
+*         name="include",
 *         in="query",
-*         description="Include location information with Room",
+*         description="relationships to include (select multiple)",
 *         required=false,
-*         allowEmptyValue=true,
+*         explode=false,
 *         @OA\Schema(
-*           type="boolean",
-*           enum=""
+*             type="array",
+*             @OA\Items(
+*                 type="string",
+*                 enum={"building","building.address","building.site"}
+*             ),
 *         ),
 *     ),
 *      @OA\Response(
@@ -1150,9 +1270,9 @@ Route::apiResource('bssid', API\BssidController::class);
  *          ),
  *      ), 
  *      @OA\Parameter(
- *          name="neighbor",
+ *          name="neighbors",
  *          in="query",
- *          description="Include neighbor information for AP",
+ *          description="Include neighbor information for APs",
  *          required=false,
  *          allowEmptyValue=true,
  *          @OA\Schema(
@@ -1162,7 +1282,7 @@ Route::apiResource('bssid', API\BssidController::class);
  *      @OA\Parameter(
  *          name="bssids",
  *          in="query",
- *          description="Include bssid information for AP",
+ *          description="Include bssid information for APs",
  *          required=false,
  *          allowEmptyValue=true,
  *          @OA\Schema(
@@ -1172,7 +1292,7 @@ Route::apiResource('bssid', API\BssidController::class);
  *      @OA\Parameter(
  *          name="location",
  *          in="query",
- *          description="Include physical location information for AP",
+ *          description="Include physical location information for APs",
  *          required=false,
  *          allowEmptyValue=true,
  *          @OA\Schema(
@@ -1210,5 +1330,63 @@ Route::apiResource('bssid', API\BssidController::class);
  * Returns All Aps
  */
 
+ /**
+* @OA\Get(
+*      path="/api/ap/{mac}",
+*      operationId="show",
+*      tags={"AP"},
+*      summary="Get AP info",
+*      description="Returns AP information",
+*      @OA\Parameter(
+*          name="mac",
+*          description="AP MAC",
+*          required=true,
+*          in="path",
+*          @OA\Schema(
+*              type="string"
+*          )
+*      ),
+*      @OA\Parameter(
+*          name="neighbor",
+*          in="query",
+*          description="Include neighbor information for APs",
+*          required=false,
+*          allowEmptyValue=true,
+*          @OA\Schema(
+*              type="boolean"
+*          ),
+*      ),
+*      @OA\Parameter(
+*          name="bssids",
+*          in="query",
+*          description="Include bssid information for APs",
+*          required=false,
+*          allowEmptyValue=true,
+*          @OA\Schema(
+*              type="boolean"
+*          ),
+*      ),
+*      @OA\Parameter(
+*          name="location",
+*          in="query",
+*          description="Include physical location information for APs",
+*          required=false,
+*          allowEmptyValue=true,
+*          @OA\Schema(
+*              type="boolean"
+*          ),
+*      ),
+*      @OA\Response(
+*          response=200,
+*          description="successful operation"
+*       ),
+*       @OA\Response(response=400, description="Bad request"),
+*       security={
+*           {"api_key_security_example": {}}
+*       }
+*     )
+*
+* Returns AP information.
+*/
 
 Route::apiResource('ap', API\ApController::class);

@@ -14,31 +14,31 @@ class DhcpResource extends JsonResource
      */
     public function toArray($request)
     {
-        $return = $this->getAttributes();
+        //$return = $this->getAttributes();
+
+        if(!$request->has('options'))
+        {
+            $this->withoutOptions();
+            //unset($return['failover']);
+        }
 
         if(!$request->has('reservations'))
         {
-            unset($return['reservations']);
+            $this->withoutReservations();
+            //unset($return['reservations']);
         }
 
         if(!$request->has('failover'))
         {
-            unset($return['failover']);
+            $this->withoutFailover();
+            //unset($return['failover']);
         }
 
         if($request->has('location'))
         {
-            $site = $this->site;
-            if($site)
-            {                
-                if($site->defaultBuilding)
-                {
-                    $site->defaultBuilding->append('address');
-                }
-                $return['site'] = $site;
-            }
+            $this->withSite();
         }
 
-        return $return;
+        return $this->getAttributes();
     }
 }

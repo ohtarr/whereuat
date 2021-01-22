@@ -9,46 +9,17 @@ use App\Address;
 use App\Contact;
 use App\Building;
 use App\Dhcp;
+use App\Collections\SiteCollection;
 
 class Site extends Model
 {
     public $loc;
 
-/*     //WHEREUAT_ADDRESS to SERVICENOWLOCATION field mappings
-    public $addressMapping = [
-        'street_number'             => 'u_street_number',
-        'predirectional'            => 'u_street_predirectional',
-        'street_name'               => 'u_street_name',
-        'street_suffix'             => 'u_street_suffix',
-        'postdirectional'           => 'u_street_postdirectional',
-        'secondary_unit_indicator'  => 'u_secondary_unit_indicator',
-        'secondary_number'          => 'u_secondary_number',
-        'city'                      => 'city',
-        'state'                     => 'state',
-        'postal_code'               => 'zip',
-        'country'                   => 'country',
-        'latitude'                  => 'latitude',
-        'longitude'                 => 'longitude',
-    ]; */
+    protected $hidden = ['defaultBuilding'];
 
-/*     public function address()
-    {
-        return $this->belongsTo('App\Address');
-    } */
-
-    public function getAddressAttribute()
-    {
-        return $this->defaultBuilding->address;
-    }
-
-/*     public function contact()
-    {
-        return $this->belongsTo('App\Contact');
-    } */
-
-    public function getContactAttribute()
-    {
-        return $this->defaultBuilding->contact;
+    public function newCollection(array $models = []) 
+    { 
+       return new SiteCollection($models); 
     }
 
     public function buildings()
@@ -61,17 +32,17 @@ class Site extends Model
         return $this->hasOne('App\Building', 'id', 'default_building_id');
     }
 
+    public function getContact()
+    {
+        return $this->defaultBuilding->contact;
+    }
+
     public function getServiceNowLocation()
     {
         if(!$this->loc && $this->loc_sys_id) {
             $this->loc = ServiceNowLocation::find($this->loc_sys_id);
         }
         return $this->loc;
-    }
-
-    public function getServiceNowLocationAttribute()
-    {
-        return $this->getServiceNowLocation();
     }
 
     public function getAllRooms()
@@ -87,14 +58,9 @@ class Site extends Model
         return collect($array);
     }
 
-    public function getRoomsAttribute()
-    {
-        return $this->getAllRooms();
-    }
-
     public function getAddress()
     {
-        return $this->address;
+        return $this->defaultBuilding->getAddress();
     }
 
     public function getCoordinates()
@@ -121,12 +87,8 @@ class Site extends Model
 
     public function get911Contact()
     {
-        return $this->contact;
-    }
-
-    public function getContact911Attribute()
-    {
-        return $this->get911Contact();
+        //return $this->contact;
+        return $this->getContact();
     }
 
     public function syncAdd()
@@ -147,25 +109,9 @@ class Site extends Model
         }
         return $address;
 
- /*        print "Site::syncAddress()\n";
-        $address = $this->address;
-        if(!$address)
-        {
-            print "ADDRESS not found, creating new...\n";
-            $address = $this->createNewAddress();
-            if(!$address)
-            {
-                $error = "Failed to create ADDRESS!\n";
-                print $error;
-                throw new \Exception($error);
-            }
-            print "ADDRESS with ID {$address->id} was created...\n";
-        }
-        print "ADDRESS with ID {$address->id} was found...\n";
-        return $address; */
     }
 
-    public function getScopesAttribute()
+    public function getScopes()
     {
         return Dhcp::findSiteScopes($this->name);
     }
@@ -173,7 +119,7 @@ class Site extends Model
     public function syncContact()
     {
         print "Obtaining existing CONTACT...\n";
-        $contact = $this->contact;
+        $contact = $this->getContact();
         if(!$contact)
         {
             print "CONTACT doesn't exist, creating...\n";
@@ -232,27 +178,6 @@ class Site extends Model
         return $contact;
     }
 
-/*     public function createNewAddress()
-    {
-        $serviceNowLocation = $this->getServiceNowLocation();
-        if($serviceNowLocation)
-        {
-            $address = new Address;
-            foreach($this->addressMapping as $addressKey => $snowKey)
-            {
-                $address->$addressKey = $serviceNowLocation->$snowKey;
-            }
-            $address->save();
-
-            $this->address_id = $address->id;
-            $this->save();
-
-            return $address;
-        } else {
-            return null;
-        }
-    }
- */
     public function createOrUpdateAddress()
     {
         $serviceNowLocation = $this->getServiceNowLocation();
@@ -263,9 +188,9 @@ class Site extends Model
         }
         if($serviceNowLocation)
         {
-            if($this->address)
+            if($this->getAddress())
             {
-                $address = $this->address;
+                $address = $this->getAddress();
             } else {
                 $address = new Address;
             }
@@ -298,7 +223,7 @@ class Site extends Model
 
     public function addressIsSynced()
     {
-        $address = $this->address;
+        $address = $this->getAddress();
         $snowloc = $this->getServiceNowLocation();
         if(!$address || !$snowloc)
         {

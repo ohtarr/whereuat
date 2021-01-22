@@ -85,4 +85,32 @@ class ApCollection extends Collection
         return $allssids;
     }
 
+    public function withSites()
+    {
+        return $this->map(function ($item, $key) {
+            return $item->withSite();
+        });
+    }
+
+    public function withLocations()
+    {
+        return $this->map(function ($item, $key) {
+            return $item->withLocation();
+        });
+    }
+
+    public function withoutNeighbors()
+    {
+        return $this->map(function ($item, $key) {
+            return $item->withoutNeighbor();
+        });
+    }
+
+    public function withoutBssids()
+    {
+        return $this->map(function ($item, $key) {
+            return $item->withoutBssids();
+        });
+    }
+
 }
