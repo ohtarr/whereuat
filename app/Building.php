@@ -48,6 +48,8 @@ class Building extends Model
         if($this->Address)
         {
             return $this->Address;
+        } elseif($this->isDefaultBuilding()) {
+            return null;
         }
         return $this->site->defaultBuilding->getAddress();
     }
