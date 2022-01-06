@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\ServiceNowLocation;
 use App\TeamsCivic;
 use App\Collections\AddressCollection;
+use Illuminate\Support\Facades\Log;
 
 class Address extends Model
 {
@@ -124,20 +125,29 @@ class Address extends Model
 
     public function syncAdd()
     {
-        print "Syncing ADDRESS...\n";
+        $msg = "ADDRESS {$this->id} - Syncing ADDRESS...";
+        print $msg . "\n";
+        Log::info($msg);
         if(!$this->teams_civic_id)
         {
-            print "TEAMSCIVIC does not exist...  Creating!\n";
+            $msg = "ADDRESS {$this->id} - TEAMSCIVIC does not exist...  Creating!...";
+            print $msg . "\n";
+            Log::info($msg);
             $civic = $this->createTeamsCivic();
             if(!$civic)
             {
-                $error = "Failed to create TEAMS CIVIC!\n";
-                print $error;
-                throw new \Exception($error);
+                $msg = "ADDRESS {$this->id} - Failed to create TEAMS CIVIC!...";
+                print $msg . "\n";
+                Log::info($msg);
+                throw new \Exception($msg);
             }
-            print "Created TEAMS CIVIC with ID {$civic->civicAddressId}...\n";
+            $msg = "ADDRESS {$this->id} - Created TEAMS CIVIC with ID {$civic->civicAddressId}...";
+            print $msg . "\n";
+            Log::info($msg);
         } else {
-            print "Found existing TEAMS CIVIC ID {$this->teams_civic_id}...\n";
+            $msg = "ADDRESS {$this->id} - Found existing TEAMS CIVIC ID {$this->teams_civic_id}...";
+            print $msg . "\n";
+            Log::info($msg);
             return $this->teams_civic_id;
         }
     }
