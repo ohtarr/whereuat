@@ -116,9 +116,9 @@ class Address extends Model
         {
             return $this->site;
         }
-        if($this->buildings->first())
+        if($this->building)
         {
-            return $this->buildings->first()->site;
+            return $this->building->site;
         }
     }
 
