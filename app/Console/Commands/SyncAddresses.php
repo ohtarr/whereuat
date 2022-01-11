@@ -63,50 +63,50 @@ class SyncAddresses extends Command
             unset($civic);
             $create = false;
             //SYNC ADDRESS = Create TEAMS CIVIC if missing.
-            $msg = "ADDRESS {$address->id} - Syncing ADDRESS ID {$address->id}...\n";
+            $msg = "SYNCADDRESSES ADDRESS ID: {$address->id} - Syncing ADDRESS ID {$address->id}...\n";
             print $msg;
             Log::info($msg);
             if($address->teams_civic_id)
             {
-                $msg =  "ADDRESS {$address->id} - Teams Civic: {$address->teams_civic_id} is already assigned...\n";
+                $msg =  "SYNCADDRESSES ADDRESS ID: {$address->id} - Teams Civic: {$address->teams_civic_id} is already assigned...\n";
                 print $msg;
                 Log::info($msg);
                 try{
                     //$civic = $this->cache->getTeamsCivic($address->teams_civic_id);
                     $civic = $civics->cacheFind($address->teams_civic_id);
                 } catch(\Exception $e) {
-                    $msg = "ADDRESS {$address->id} - " . $e->getMessage();
+                    $msg = "SYNCADDRESSES ADDRESS ID: {$address->id} - " . $e->getMessage();
                     print $msg;
                     Log::error($msg);
                     continue;
                 }
                 if($civic)
                 {
-                    $msg = "ADDRESS {$address->id} - TEAMS CIVIC ID {$civic->civicAddressId} exists in Teams...\n";
+                    $msg = "SYNCADDRESSES ADDRESS ID: {$address->id} - TEAMS CIVIC ID {$civic->civicAddressId} exists in Teams...\n";
                     print $msg;
                     Log::info($msg);
                     //CHECK ADDRESS
                     $match = $address->compareTeamsCivic($civic);
                     if(!$match)
                     {
-                        $msg = "ADDRESS {$address->id} - ADDRESS and TEAMS CIVIC do NOT match!  Creating new TEAMS CIVIC\n";
+                        $msg = "SYNCADDRESSES ADDRESS ID: {$address->id} - ADDRESS and TEAMS CIVIC do NOT match!  Creating new TEAMS CIVIC\n";
                         print $msg;
                         Log::info($msg);
                         $create = true;
                     } else {
-                        $msg = "ADDRESS {$address->id} - ADDRESS and TEAMS CIVIC match!\n";
+                        $msg = "SYNCADDRESSES ADDRESS ID: {$address->id} - ADDRESS and TEAMS CIVIC match!\n";
                         print $msg;
                         Log::info($msg);
                     }
                 } else {
-                    $msg = "ADDRESS {$address->id} - Unable to find existing TEAMS CIVIC, creating new TEAMS CIVIC...\n";
+                    $msg = "SYNCADDRESSES ADDRESS ID: {$address->id} - Unable to find existing TEAMS CIVIC, creating new TEAMS CIVIC...\n";
                     print $msg;
                     Log::info($msg);
                     $create = true;
                 }
                 
             } else {
-                $msg = "ADDRESS {$address->id} - Unable to find an assigned TEAMS CIVIC ID, creating a new TEAMS CIVIC...\n";
+                $msg = "SYNCADDRESSES ADDRESS ID: {$address->id} - Unable to find an assigned TEAMS CIVIC ID, creating a new TEAMS CIVIC...\n";
                 print $msg;
                 Log::info($msg);
                 $create = true;
@@ -116,22 +116,22 @@ class SyncAddresses extends Command
                 try{
                     $newcivic = $address->createTeamsCivic();
                 } catch(\Exception $e) {
-                    $msg = "ADDRESS {$address->id} - " . $e->getMessage() . "\n";
+                    $msg = "SYNCADDRESSES ADDRESS ID {$address->id} - " . $e->getMessage() . "\n";
                     print $msg;
                     Log::error($msg);
                 }
                 if(isset($newcivic))
                 {
-                    $msg = "ADDRESS {$address->id} - Created TEAMS CIVIC with ID of {$newcivic->civicAddressId}.\n";
+                    $msg = "SYNCADDRESSES ADDRESS ID: {$address->id} - Created TEAMS CIVIC with ID of {$newcivic->civicAddressId}.\n";
                     print $msg;
                     Log::info($msg);
                 } else {
-                    $msg = "ADDRESS {$address->id} - Failed to create TEAMS CIVIC!  Skipping ADDRESS...\n";
+                    $msg = "SYNCADDRESSES ADDRESS ID: {$address->id} - Failed to create TEAMS CIVIC!  Skipping ADDRESS...\n";
                     print $msg;
                     Log::error($msg);
                 }
             }
-            $msg = "ADDRESS {$address->id} - Completed Sync of ADDRESS ID {$address->id}...\n";
+            $msg = "SYNCADDRESSES ADDRESS ID: {$address->id} - Completed Sync of ADDRESS ID {$address->id}...\n";
             print $msg;
             Log::info($msg);
         }
