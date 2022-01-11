@@ -166,12 +166,34 @@ class Address extends Model
             {
                 if($this->iso3166ToAlpha2($this->$addressKey) != $this->iso3166ToAlpha2($civic->$teamsKey))
                 {
+                    print "No Address to Civic Match.".PHP_EOL; 
+
+                    // Adding some additional print to screen for troubleshooting. TR 010622
+                    print_r($addressKey); 
+                    print_r($teamsKey); 
+                    print_r($this->iso3166ToAlpha2($this->$addressKey)); 
+                    print_r($this->iso3166ToAlpha2($civic->$teamsKey)); 
                     $matches = false;
                     break;
                 }
             } else {
-                if($this->$addressKey != $civic->$teamsKey)
+                //if($this->$addressKey != $civic->$teamsKey)
+                //Added trim due to some whitespace.
+                if(trim($this->$addressKey) != trim($civic->$teamsKey))
                 {
+                    print "No Country... No Key Match.".PHP_EOL; 
+                                        
+                    // Adding some additional print to screen for troubleshooting. TR 010622
+                    print_r($this); 
+                    print_r($civic); 
+                    
+                    print "AddressKey: ".$addressKey.PHP_EOL; 
+                    print "TeamsKey: ".$teamsKey.PHP_EOL; 
+                    var_dump(["Address" => $this->$addressKey, "Teams" => $civic->$teamsKey]); 
+                    //var_dump($civic->$teamsKey);
+
+                    
+                    //die(); 
                     $matches = false;
                     break;
                 }
