@@ -204,6 +204,9 @@ class Address extends Model
 
     public function createTeamsCivic()
     {
+        $msg = "ADDRESS {$this->id} - createTeamsCivic()";
+        print $msg . "\n";
+        Log::info($msg);
         $civic = new TeamsCivic;
         $civic->companyName = $this->getSite()->name;
         $civic->description = $this->getSite()->name;
@@ -213,17 +216,20 @@ class Address extends Model
         }
         $civic->countryOrRegion = $this->iso3166ToAlpha2($this->country);
         $civicid = $civic->save();
+        $msg = "ADDRESS {$this->id} - Created Civic ID: {$civicid}...";
+        print $msg . "\n";
+        Log::info($msg);
         if(!$civicid)
         {
             throw new \Exception("Failed to create TEAMS CIVIC!");
         }
         $civic->civicAddressId = $civicid;
         //$civic = TeamsCivic::find($civicid);
-        $status = $civic->validate();
-        if($status == false)
-        {
-            throw new \Exception("Failed to validate TEAMS CIVIC!");
-        }
+        //$status = $civic->validate();
+        //if($status == false)
+        //{
+        //    throw new \Exception("Failed to validate TEAMS CIVIC!");
+        //}
         $this->teams_civic_id = $civic->civicAddressId;
         $this->save();
         return $civic;

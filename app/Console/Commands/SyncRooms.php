@@ -138,7 +138,14 @@ class SyncRooms extends Command
             print "Syncing ROOM ID {$room->id} for SITE {$room->building->site->name}...\n";
 
             //$civic = $this->cache->getTeamsCivic($room->getAddress()->teams_civic_id);
-            $civic = $teamsCivics->cacheFind($room->getAddress()->teams_civic_id);
+            try{
+                $civic = $teamsCivics->cacheFind($room->getAddress()->teams_civic_id);
+            } catch(\Exception $e) {
+                $msg = "SYNCROOM ROOM ID: {$room->id} - " . $e->getMessage();
+                print $msg;
+                Log::error($msg);
+                continue;
+            }
             if(!$civic)
             {
                 $error = "Failed to obtain TEAMS CIVIC from ADDRESS... Skipping ROOM!\n";
