@@ -46,15 +46,16 @@ class SyncPublicIps extends Command
         foreach($publicips as $publicip)
         {
             unset($exists);
-
-            print "Syncing IP {$publicip->real_ip} ...\n";
+            $msg = "SYNCPUBLICIPS PUBLICIP : {$publicip->real_ip} Syncing IP...";
+            print $msg . "\n";
+            Log::error($msg);
 
             $exists = $teamstrustedips->where('identity',$publicip->real_ip)->first();
 
             if(!$exists)
             {
                 $msg = "SYNCPUBLICIPS PUBLICIP : {$publicip->real_ip} does NOT exist, adding!";
-                print $msg;
+                print $msg . "\n";
                 Log::error($msg);
                 try{
                     $trusted = new TeamsTrustedIp;
@@ -66,23 +67,25 @@ class SyncPublicIps extends Command
                     $trusted->save();
                 } catch(\Exception $e) {
                     $msg = "SYNCPUBLICIPS PUBLICIP : {$publicip->real_ip} - " . $e->getMessage();
-                    print $msg;
+                    print $msg . "\n";
                     Log::error($msg);
                     continue;
                 }
             } else {
-                print "IP {$publicip->real_ip} already exists.  Checking if Description matches...\n";
+                $msg = "SYNCPUBLICIPS PUBLICIP : {$publicip->real_ip} already exists.  Checking if Description matches...";
+                print $msg . "\n";
+                Log::error($msg);
                 if(strtoupper(substr($publicip->device_name,0,8)) != $exists->description)
                 {
                     $msg = "SYNCPUBLICIPS PUBLICIP : {$publicip->real_ip} Description does NOT match, updating...";
-                    print $msg;
+                    print $msg . "\n";
                     Log::error($msg);
                     try{
                         $exists->description = strtoupper(substr($publicip->device_name,0,8));
                         $exists->save();
                     } catch(\Exception $e) {
                         $msg = "SYNCPUBLICIPS PUBLICIP : {$publicip->real_ip} - " . $e->getMessage();
-                        print $msg;
+                        print $msg . "\n";
                         Log::error($msg);
                         continue;
                     }
