@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\PublicIp;
 use App\TeamsTrustedIp;
+use Illuminate\Support\Facades\Log;
 
 class SyncPublicIps extends Command
 {
@@ -53,13 +54,20 @@ class SyncPublicIps extends Command
             if(!$exists)
             {
                 print "IP {$publicip->real_ip} does NOT exist, adding!\n";
-                $trusted = new TeamsTrustedIp;
-                //$trusted->identity = $publicip->real_ip;
-                //$trusted->maskBits = "32";
-                $trusted->maskBits = $publicip->cidr;
-                $trusted->description = strtoupper(substr($publicip->device_name,0,8));
-                $trusted->ipAddress = $publicip->real_ip;
-                $trusted->save();
+                try{
+                    $trusted = new TeamsTrustedIp;
+                    //$trusted->identity = $publicip->real_ip;
+                    //$trusted->maskBits = "32";
+                    $trusted->maskBits = $publicip->cidr;
+                    $trusted->description = strtoupper(substr($publicip->device_name,0,8));
+                    $trusted->ipAddress = $publicip->real_ip;
+                    $trusted->save();
+                } catch(\Exception $e) {
+                    $msg = "SYNCPUBLICIPS PUBLICIP : {$publicip->real_ip} - " . $e->getMessage();
+                    print $msg;
+                    Log::error($msg);
+                    continue;
+                }
             } else {
                 print "IP {$publicip->real_ip} already exists.  Checking if Description matches...\n";
                 if(strtoupper(substr($publicip->device_name,0,8)) != $exists->description)
