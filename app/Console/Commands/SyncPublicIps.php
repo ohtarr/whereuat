@@ -53,7 +53,9 @@ class SyncPublicIps extends Command
 
             if(!$exists)
             {
-                print "IP {$publicip->real_ip} does NOT exist, adding!\n";
+                $msg = "SYNCPUBLICIPS PUBLICIP : {$publicip->real_ip} does NOT exist, adding!";
+                print $msg;
+                Log::error($msg);
                 try{
                     $trusted = new TeamsTrustedIp;
                     //$trusted->identity = $publicip->real_ip;
@@ -72,9 +74,18 @@ class SyncPublicIps extends Command
                 print "IP {$publicip->real_ip} already exists.  Checking if Description matches...\n";
                 if(strtoupper(substr($publicip->device_name,0,8)) != $exists->description)
                 {
-                    print "Description does NOT match, updating...\n";
-                    $exists->description = strtoupper(substr($publicip->device_name,0,8));
-                    $exists->save();
+                    $msg = "SYNCPUBLICIPS PUBLICIP : {$publicip->real_ip} Description does NOT match, updating...";
+                    print $msg;
+                    Log::error($msg);
+                    try{
+                        $exists->description = strtoupper(substr($publicip->device_name,0,8));
+                        $exists->save();
+                    } catch(\Exception $e) {
+                        $msg = "SYNCPUBLICIPS PUBLICIP : {$publicip->real_ip} - " . $e->getMessage();
+                        print $msg;
+                        Log::error($msg);
+                        continue;
+                    }
                 }
             }
         }
