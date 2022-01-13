@@ -7,6 +7,7 @@ use App\Room;
 //use App\Cache;
 use App\TeamsCivic;
 use App\TeamsLocation;
+use Illuminate\Support\Facades\Log;
 
 class SyncRooms extends Command
 {
