@@ -7,6 +7,7 @@ use App\ServiceNowLocation;
 use App\TeamsCivic;
 use App\Collections\AddressCollection;
 use Illuminate\Support\Facades\Log;
+use App\E911Erl;
 
 class Address extends Model
 {
@@ -60,6 +61,29 @@ class Address extends Model
     {
         $array = [
             'street_number',
+            'predirectional',
+            'street_name',
+            'street_suffix',
+            'postdirectional',
+        ];
+        $street1 = "";
+        foreach($array as $element)
+        {
+            if($this->$element)
+            {
+                if($street1)
+                {
+                    $street1 .= " ";
+                }
+                $street1 .= $this->$element;
+            }
+        }
+        return $street1;
+    }
+
+    public function getStreet()
+    {
+        $array = [
             'predirectional',
             'street_name',
             'street_suffix',

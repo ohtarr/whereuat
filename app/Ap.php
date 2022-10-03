@@ -58,9 +58,10 @@ class Ap extends Model
     public static function find($search)
     {
         $aps = self::all();
-        $return = $aps->filter(function ($item) use ($search) {
-            return false !== stripos(strtolower($item->name), strtolower($search));
-        });
+        $return = $aps->where('mac',$search)->first();
+/*         $return = $aps->filter(function ($item) use ($search) {
+            return false !== stripos(strtolower($item->mac), strtolower($search));
+        }); */
         return $return;
     }
 

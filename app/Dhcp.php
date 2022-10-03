@@ -123,7 +123,7 @@ class Dhcp extends Model
         }
     }
 
-    public static function allWithSites($columns = [])
+    /* public static function allWithSites($columns = [])
     {
         $scopes = self::all();
         foreach($scopes as $scope)
@@ -138,7 +138,7 @@ class Dhcp extends Model
             $newscopes[] = $newscope;
         }
         return collect($newscopes);
-    }
+    } */
 
     public function withSite()
     {

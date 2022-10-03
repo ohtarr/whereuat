@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Dhcp as Model;
 use Illuminate\Http\Request;
-use App\Http\Resources\DhcpResource as Resource;
-use App\Http\Resources\DhcpCollection as ResourceCollection;
-use App\Queries\DhcpQuery as Query;
+use App\DeviceSwitch as Model;
+use App\Http\Resources\SwitchResource as Resource;
+use App\Http\Resources\SwitchCollection as ResourceCollection;
+use App\Queries\SwitchQuery as Query;
 
-class DhcpController extends Controller
+class SwitchController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -33,7 +33,7 @@ class DhcpController extends Controller
          return $resource;
     }
 
-     /**
+    /**
      * Display the specified resource.
      *
      * @param  id  $id
@@ -49,19 +49,4 @@ class DhcpController extends Controller
         }
     }
 
-         /**
-     * Display the specified resource.
-     *
-     * @param  ip  $ip
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function showByIp(Request $request, $ip)
-    {
-        $object = Model::findScope($ip);
-        if($object)
-        {
-            return new Resource($object);
-        }
-    }
 }

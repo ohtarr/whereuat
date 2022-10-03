@@ -5,9 +5,14 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\TeamsLocation;
 use App\Collections\RoomCollection;
+use App\TMS;
 
 class Room extends Model
 {
+    protected $casts = [
+        'data'  =>  'json',
+    ];
+
     public function newCollection(array $models = []) 
     { 
        return new RoomCollection($models); 
@@ -114,5 +119,97 @@ class Room extends Model
         $this->save();
         return $teamsLocationId;
     }
+
+    public function getE911Erl()
+    {
+        $erlname = $this->building->site->name . "_" . $this->id;
+        return E911Erl::all()->where('erl_id',$erlname)->first();
+    }
+
+    public function getE911ErlLoc()
+    {
+        $return = "";
+        $street2 = $this->getAddress()->getStreet2Attribute();
+        if($street2)
+        {
+            $return .= $street2 . " - ";
+        }
+        $return .= $this->building->name . " - " . $this->name;
+        $return = substr($return, 0, 50);
+        return $return;
+    }
+
+    public function getErlName()
+    {
+        return $this->building->site->name . "_" . $this->id;        
+    }
+
+    public function addE911Erl()
+    {
+        $erlname = $this->getErlName();
+        $rmaddress = $this->getAddress();
+        $number = null;
+
+        $address = [
+            "LOC"       => $this->getE911ErlLoc(),
+            "HNO"       => $rmaddress->street_number,
+            "PRD"       => $rmaddress->predirectional,
+            "RD"        => $rmaddress->street_name,
+            "STS"       => $rmaddress->street_suffix,
+            "POD"       => $rmaddress->postdirectional,
+            "A3"        => $rmaddress->city,
+            "A1"        => $rmaddress->state,
+            //"country"   => $rmaddress::iso3166ToAlpha3($rmaddress->country),
+            "country"   => $rmaddress->country,            
+            "PC"        => $rmaddress->postal_code,
+        ];
+
+        if($address['country'] == "CAN")
+        {
+            $elin = $this->getTMSElin();
+            if(!$elin)
+            {
+                $elin = $this->reserveElin();
+            }
+            if(!$elin)
+            {
+                throw \Exception('Unable to find an ELIN for Canadian site!');
+            }
+            $number = $elin['number'];
+        }
+
+        E911Erl::add($erlname, $address, $number);
+        $erl = $this->getE911Erl();
+        return $erl;
+    }
+
+    public function getTMSElin()
+    {
+        $tms = new TMS(env('TMS_URL'),env('TMS_USERNAME'),env('TMS_PASSWORD'));
+        $elins = $tms->getCaElins();
+        $elin = $elins->where('name',$this->getErlName())->first();
+        if($elin)
+        {
+            return $elin;
+        }
+    }
+
+    public function reserveElin()
+    {
+        $tms = new TMS(env('TMS_URL'),env('TMS_USERNAME'),env('TMS_PASSWORD'));
+        return $tms->reserveCaElin($this->getErlName());
+    }
+
+    public function releaseElin()
+    {
+        $elin = $this->getTMSElin();
+        if(!$elin)
+        {
+            return null;
+        }
+        $tms = new TMS(env('TMS_URL'),env('TMS_USERNAME'),env('TMS_PASSWORD'));
+        return $tms->releaseCaElin($elin['id']);
+    }
+
 
 }

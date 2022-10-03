@@ -7,12 +7,19 @@ use GuzzleHttp\Client as GuzzleHttpClient;
 use App\TeamsSwitch;
 use App\Site;
 use App\Room;
+use App\Collections\SwitchCollection;
+use App\E911Switch;
 
 class DeviceSwitch extends Model
 {
     protected $guarded =[];
 
     public $cache;
+
+    public function newCollection(array $models = [])
+    { 
+       return new SwitchCollection($models); 
+    } 
 
     public static function all($columns = [])
     {
@@ -29,7 +36,15 @@ class DeviceSwitch extends Model
                 $switches[] = $object;
             }
         }
-        return collect($switches);
+        return new SwitchCollection($switches);
+    }
+
+    public static function find($key)
+    {
+        $objects = self::all();
+        $return = $objects->find($key);
+        //$return = $objects->where('ip',$search)->first();
+        return $return;
     }
 
     public function cacheAll($force = false)
@@ -99,4 +114,30 @@ class DeviceSwitch extends Model
         $switch->save();
     }
 
+    public function withLocation()
+    {
+        $room = $this->getRoom();
+        if($room)
+        {
+            $room->building = $room->building;
+            $room->building->site = $room->building->site;
+            $this->room = $room;
+        }
+        return $this;
+    }
+
+    public function getE911Switch()
+    {
+        return E911Switch::all()->where('switch_ip',$this->ip)->first();
+    }
+
+    public function addE911Switch()
+    {
+        $erl = $this->getRoom()->getE911Erl();
+        if(!$erl)
+        {
+            return null;
+        }
+        E911Switch::add($this->ip, $this->vendor, $erl, $this->name);
+    }
 }
