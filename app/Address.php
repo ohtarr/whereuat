@@ -193,10 +193,10 @@ class Address extends Model
                     print "No Address to Civic Match.".PHP_EOL; 
 
                     // Adding some additional print to screen for troubleshooting. TR 010622
-                    print_r($addressKey); 
-                    print_r($teamsKey); 
-                    print_r($this->iso3166ToAlpha2($this->$addressKey)); 
-                    print_r($this->iso3166ToAlpha2($civic->$teamsKey)); 
+                    //print_r($addressKey); 
+                    //print_r($teamsKey); 
+                    //print_r($this->iso3166ToAlpha2($this->$addressKey)); 
+                    //print_r($this->iso3166ToAlpha2($civic->$teamsKey)); 
                     $matches = false;
                     break;
                 }
@@ -205,6 +205,7 @@ class Address extends Model
                 //Added trim due to some whitespace.
                 if(trim($this->$addressKey) != trim($civic->$teamsKey))
                 {
+                    print $this->$addressKey . " ==? " . $civic->$teamsKey . "\n";
                     print "No Country... No Key Match.".PHP_EOL; 
                                         
                     // Adding some additional print to screen for troubleshooting. TR 010622
@@ -226,8 +227,35 @@ class Address extends Model
         return $matches;
     }
 
+    public function isValid()
+    {
+        $valid = true;
+        $required = [
+            'street_number',
+            'street_name',
+            'city',
+            'state',
+            'country',
+            'latitude',
+            'longitude',
+        ];
+        foreach($required as $element)
+        {
+            if(!$this->$element)
+            {
+                $valid = false;
+                break;
+            }
+        }
+        return $valid;
+    }
+
     public function createTeamsCivic()
     {
+        if(!$this->isValid())
+        {
+            throw new \Exception("ADDRESS is not valid, unable to create TEAMS CIVIC!");
+        }
         $msg = "ADDRESS {$this->id} - createTeamsCivic()";
         print $msg . "\n";
         Log::info($msg);
