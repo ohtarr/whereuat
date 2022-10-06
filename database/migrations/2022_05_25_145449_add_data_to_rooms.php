@@ -14,7 +14,7 @@ class AddDataToRooms extends Migration
     public function up()
     {
         Schema::table('rooms', function (Blueprint $table) {
-            $table->json('data')->nulable();
+            $table->json('data')->nullable();
         });
     }
 

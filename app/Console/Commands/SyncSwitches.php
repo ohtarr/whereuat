@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use App\DeviceSwitch;
 use App\TeamsSwitch;
 use App\TeamsLocation;
@@ -78,7 +79,16 @@ class SyncSwitches extends Command
             if(!$teamsSwitch)
             {
                 print "SWITCH does not exist...CREATING TEAMS SWITCH!!\n";
-                $teamsSwitch = $switch->setTeamsSwitchFromTeamsLocationId($location->locationId);
+                try
+                {
+                    $teamsSwitch = $switch->setTeamsSwitchFromTeamsLocationId($location->locationId);
+                } catch(\Exception $e) {
+                    $msg = "SYNCSWITCH SWITCH: {$switch->name} - " . $e->getMessage();
+                    print $msg;
+                    Log::error($msg);
+                    continue;
+                }
+
             } else {
                 print "SWITCH already exists...Checking TEAMS LOCATION...\n";
                 //$teamsSwitchLocation = $this->cache->getTeamsLocation($teamsSwitch->locationId);
@@ -89,13 +99,29 @@ class SyncSwitches extends Command
                     if($teamsSwitchLocation && ($teamsSwitchLocation->locationId != $location->locationId))
                     {
                         print "TEAMS SWITCH location is not correct, fixing...\n";
-                        $teamsSwitch = $switch->setTeamsSwitchFromTeamsLocationId($location->locationId);
+                        try
+                        {
+                            $teamsSwitch = $switch->setTeamsSwitchFromTeamsLocationId($location->locationId);
+                        } catch(\Exception $e) {
+                            $msg = "SYNCSWITCH SWITCH: {$switch->name} - " . $e->getMessage();
+                            print $msg;
+                            Log::error($msg);
+                            continue;
+                        }
                     } else {
                         print "TEAMS SWITCH location is set correct!\n";
                     }
                 } else {
                     print "TEAMS SWITCH location not found, Assigning to ROOM existing location...\n";
-                    $teamsSwitch = $switch->setTeamsSwitchFromTeamsLocationId($location->locationId);
+                    try
+                    {
+                        $teamsSwitch = $switch->setTeamsSwitchFromTeamsLocationId($location->locationId);
+                    } catch(\Exception $e) {
+                        $msg = "SYNCSWITCH SWITCH: {$switch->name} - " . $e->getMessage();
+                        print $msg;
+                        Log::error($msg);
+                        continue;
+                    }
                 }
             }
         }
