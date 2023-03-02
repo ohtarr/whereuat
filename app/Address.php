@@ -325,4 +325,15 @@ class Address extends Model
         }
     }
 
+    public function purge()
+    {
+        //Delete Teams Civic Address
+        $teamscivic = $this->getTeamsCivic();
+        if($teamscivic)
+        {
+            $teamscivic->delete();
+        }
+        //delete self
+        $this->delete();
+    }
 }

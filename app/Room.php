@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use App\TeamsLocation;
 use App\Collections\RoomCollection;
 use App\TMS;
+use \EmergencyGateway\Address as EgwAddress;
+
 
 class Room extends Model
 {
@@ -120,38 +122,87 @@ class Room extends Model
         return $teamsLocationId;
     }
 
-    public function getE911Erl()
+    //Attempt to fetch the E911Erl for this room using E911Erl ID (locatioin_id)
+    //Returns an E911Erl object or NULL.
+    public function getE911ErlById()
     {
-        $erlname = $this->building->site->name . "_" . $this->id;
-        return E911Erl::all()->where('erl_id',$erlname)->first();
+        if(isset($this->data['E911Erl_id']))
+        {
+            return E911Erl::getById($this->data['E911Erl_id']);
+        }
     }
 
-    public function getE911ErlLoc()
+    //Attempt to fetch the E911Erl for this room using E911Erl NAME (erl_id)
+    //Returns an E911Erl object or NULL.
+    public function getE911ErlByName()
+    {
+        $erl = E911Erl::getByName($this->generateErlName());
+        if(!$erl)
+        {
+            return null;
+        }
+        if(!isset($this->data['E911Erl_id']))
+        {
+            $data = $this->data;
+            $data['E911Erl_id'] = $erl->location_id;
+            $this->data = $data;
+            $this->save();
+        }
+        return $erl;
+    }
+
+    //Attempt to fetch the E911Erl for this room buy first using ID, then using NAME.
+    //Returns an E911Erl object or NULL.
+    public function getE911Erl()
+    {
+        $erl = $this->getE911ErlById();
+        if($erl)
+        {
+            return $erl;
+        }
+        $erl = $this->getE911ErlByName();
+        if($erl);
+        {
+            return $erl;
+        }
+    }
+
+    //Generates a description for this Room
+    //Returns and STRING.
+    public function generateE911ErlLoc()
     {
         $return = "";
-        $street2 = $this->getAddress()->getStreet2Attribute();
+        $address = $this->getAddress();
+        $building = $this->building;
+        $site = $building->site;
+        if(!$address)
+        {
+            return null;
+        }
+        $street2 = $address->getStreet2Attribute();
         if($street2)
         {
             $return .= $street2 . " - ";
         }
-        $return .= $this->building->name . " - " . $this->name;
+        $return .= $site->name . " - " . $this->building->name . " - " . $this->name;
         $return = substr($return, 0, 50);
         return $return;
     }
 
-    public function getErlName()
+    //Generates a NAME in format SITENAME_ROOMID
+    //Returns a STRING.
+    public function generateErlName()
     {
         return $this->building->site->name . "_" . $this->id;        
     }
 
-    public function addE911Erl()
+    //Generates an E911Erl formatted Address Array
+    //Returns and Array.
+    public function generateE911Address()
     {
-        $erlname = $this->getErlName();
         $rmaddress = $this->getAddress();
-        $number = null;
-
         $address = [
-            "LOC"       => $this->getE911ErlLoc(),
+            "LOC"       => $this->generateE911ErlLoc(),
             "HNO"       => $rmaddress->street_number,
             "PRD"       => $rmaddress->predirectional,
             "RD"        => $rmaddress->street_name,
@@ -159,10 +210,80 @@ class Room extends Model
             "POD"       => $rmaddress->postdirectional,
             "A3"        => $rmaddress->city,
             "A1"        => $rmaddress->state,
-            //"country"   => $rmaddress::iso3166ToAlpha3($rmaddress->country),
             "country"   => $rmaddress->country,            
             "PC"        => $rmaddress->postal_code,
         ];
+        return $address;
+    }
+
+    public function generateValidationAddress()
+    {
+        $address = $this->getAddress();
+        if(!$address)
+        {
+            return null;
+        }
+        $site = $this->building->site;
+        if(!$site)
+        {
+            return null;
+        }
+        $street1REST = "";
+        if($address['predirectional'])
+        {
+            $street1REST .= $address['PRD'] . " ";
+        }
+        if($address['street_name'])
+        {
+            $street1REST .= $address['street_name'];
+        }
+        if($address['street_suffix'])
+        {
+            $street1REST .= " " . $address['street_suffix'];
+        }
+        if($address['postdirectional'])
+        {
+            $street1REST .= " " . $address['postdirectional'];
+        }
+        return [
+            'LOC'       => $this->generateE911ErlLoc(),
+            'HNO'       => $address->street_number,
+            'RD'        => $street1REST,
+            "A3"        => $address->city,
+            "A1"        => $address->state,
+            "country"   => $address->country,            
+            "PC"        => $address->postal_code,
+            'NAM'       => $site->name,
+        ];
+    }
+
+    public function validateAddress()
+    {
+        $addressobj = EgwAddress::fromArray($this->generateValidationAddress());
+        $results = E911Erl::getEgw()->validateAddress($addressobj);
+        if($results->status == 0)
+        {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    //Generates an ERL NAME and an ADDRESS and attempts to create an E911Erl.
+    //If successful, it will add the E911Erl location_id to data['E911Erl_id'] property of the room.
+    //returns an E911Erl Object.
+    public function addE911Erl()
+    {
+        $erl = $this->getE911Erl();
+        if($erl)
+        {
+            throw new \Exception('E911Erl already exists for this room!');
+            return null;
+        }
+        $erlname = $this->generateErlName();
+        $address = $this->generateE911Address();
+        $elin = null;
 
         if($address['country'] == "CAN")
         {
@@ -175,19 +296,90 @@ class Room extends Model
             {
                 throw \Exception('Unable to find an ELIN for Canadian site!');
             }
-            $number = $elin['number'];
         }
 
-        E911Erl::add($erlname, $address, $number);
+        $attempt = E911Erl::add($erlname, $address, $elin['number']);
         $erl = $this->getE911Erl();
+        if($erl)
+        {
+            $data = $this->data;
+            $data['E911Erl_id'] = $erl->location_id;
+            $this->data = $data;
+            $this->save();
+        }
         return $erl;
+    }
+
+    //Attempt to locate and delete associated E911Erl.
+    //returns TRUE/FALSE
+    public function deleteE911Erl()
+    {
+        $erl = $this->getE911Erl();
+        if($erl)
+        {
+            $erl->delete();
+        }
+        $erl2 = $this->getE911Erl();
+        if(!$erl2)
+        {
+            $data = $this->data;
+            unset($data['E911Erl_id']);
+            $this->data = $data;
+            $this->save();
+            return true;
+        } else {
+            $data = $this->data;
+            $data['E911Erl_id'] = $erl2->location_id;
+            $this->data = $data;
+            $this->save();
+            return false;
+        }
+    }
+
+    public function validateE911Erl()
+    {
+        $mapping = [
+            "LOC"       => "address_type",
+            "HNO"       => "hno",
+            "PRD"       => "prd",
+            "RD"        => "rd",
+            "STS"       => "sts",
+            "POD"       => "pod",
+            "A3"        => "city",
+            "A1"        => "state",
+            "country"   => "country",
+            "PC"        => "zip_code",
+       
+        ];
+        $erl = $this->getE911Erl();
+        if(!$erl)
+        {
+            return null;
+        }
+        $address = $this->generateE911Address();
+        $matches = 1;
+        foreach($mapping as $room_key => $erl_key)
+        {
+            if(strtoupper($address[$room_key]) != strtoupper($erl->$erl_key))
+            {
+                $matches = 0;
+                break;
+            }
+        }
+        return $matches;
+    }
+
+    //Create a new TMS object to access the TMS system.
+    //returns a TMS object.
+    public function getTMS()
+    {
+        return new TMS(env('TMS_URL'),env('TMS_USERNAME'),env('TMS_PASSWORD'));        
     }
 
     public function getTMSElin()
     {
-        $tms = new TMS(env('TMS_URL'),env('TMS_USERNAME'),env('TMS_PASSWORD'));
-        $elins = $tms->getCaElins();
-        $elin = $elins->where('name',$this->getErlName())->first();
+        $elins = $this->getTMS()->getCaElins();
+        $elin = $elins->where('name',$this->generateErlName())->first();
         if($elin)
         {
             return $elin;
@@ -196,8 +388,7 @@ class Room extends Model
 
     public function reserveElin()
     {
-        $tms = new TMS(env('TMS_URL'),env('TMS_USERNAME'),env('TMS_PASSWORD'));
-        return $tms->reserveCaElin($this->getErlName());
+        return $this->getTMS()->reserveCaElin($this->generateErlName());
     }
 
     public function releaseElin()
@@ -207,9 +398,27 @@ class Room extends Model
         {
             return null;
         }
-        $tms = new TMS(env('TMS_URL'),env('TMS_USERNAME'),env('TMS_PASSWORD'));
-        return $tms->releaseCaElin($elin['id']);
+        return $this->getTMS()->releaseCaElin($elin['id']);
     }
 
+    public function purge()
+    {
+        //Delete teams location
+        $teamslocation = $this->getTeamsLocation();
+        if($teamslocation)
+        {
+            $teamslocation->delete();
+        }
+        //Clear TMS ELIN
+        $this->releaseElin();
+        //Delete E911 ERL
+        $e911erl = $this->getE911Erl();
+        if($e911erl)
+        {
+            $e911erl->purge();
+        }
+        //delete self
+        $this->delete();
+    }
 
 }

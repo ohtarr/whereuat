@@ -127,4 +127,18 @@ class Building extends Model
         return $room;
     }
 
+    public function purge()
+    {
+        foreach($this->rooms as $room)
+        {
+            $room->purge();
+        }
+        //Purge Address
+        $address = $this->address;
+        if($address)
+        {
+            $address->purge();
+        }
+        $this->delete();
+    }
 }

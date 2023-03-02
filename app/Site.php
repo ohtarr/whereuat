@@ -243,4 +243,13 @@ class Site extends Model
         return $matches;
     }
 
+    public function purge()
+    {
+        foreach($this->buildings as $building)
+        {
+            $building->purge();
+        }
+        $this->delete();
+    }
+
 }

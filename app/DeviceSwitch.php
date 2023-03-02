@@ -133,11 +133,79 @@ class DeviceSwitch extends Model
 
     public function addE911Switch()
     {
-        $erl = $this->getRoom()->getE911Erl();
+        $room = $this->getRoom();
+        if(!$room)
+        {
+            return null;
+        }
+        $erl = $room->getE911ErlByName();
         if(!$erl)
         {
             return null;
         }
-        E911Switch::add($this->ip, $this->vendor, $erl, $this->name);
+        E911Switch::add($this->ip, $this->vendor, $erl->erl_id, $this->name);
+    }
+
+    public function validateE911Switch()
+    {
+        $mapping = [
+            'ip'        =>  'switch_ip',
+            'name'      =>  'switch_description',
+            'vendor'    =>  'switch_vendor',
+        ];
+        $room = $this->getRoom();
+        if(!$room)
+        {
+            print "NO ROOM FOUND!\n";
+            return null;
+        }
+        $erl = $room->getE911Erl();
+        if(!$erl)
+        {
+            print "NO ERL FOUND!\n";
+            return null;
+        }
+        $e911switch = $this->getE911Switch();
+        if(!$e911switch)
+        {
+            print "NO E911SWITCH FOUND!\n";
+            return null;
+        }
+        $matches = 1;
+        foreach($mapping as $deviceswitch_key => $e911switch_key)
+        {
+            if($this->$deviceswitch_key != $e911switch->$e911switch_key)
+            {
+                print "NO MATCH!\n";
+                $matches = 0;
+                break;
+            }
+        }
+        if($matches == 1)
+        {
+            if($room->generateErlName() != $erl->erl_id)
+            {
+                print $room->generateErlName() . "\n";
+                print $erl->erl_id . "\n";
+                print "ERL NAME DOES NOT MATCH!\n";
+                $matches = 0;
+            }
+        }
+        return $matches;
+    }
+
+    public function updateE911Switch()
+    {
+        $e911switch = $this->getE911Switch();
+        if(!$e911switch)
+        {
+            return null;
+        }
+        $e911erl = $this->getRoom()->getE911Erl();
+        if(!$e911erl)
+        {
+            return null;
+        }
+        $e911switch->modify($this->ip, $this->vendor, $e911erl->erl_id, $this->name);
     }
 }

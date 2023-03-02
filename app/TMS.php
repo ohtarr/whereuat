@@ -32,6 +32,11 @@ class TMS extends Model
         static::$password = env('TMS_PASSWORD');
     } */
 
+    public static function create()
+    {
+        return new TMS(env('TMS_URL'),env('TMS_USERNAME'),env('TMS_PASSWORD'));        
+    }
+
     public static function guzzle(array $guzzleparams)
     {
         $options = [];
@@ -105,8 +110,7 @@ class TMS extends Model
 
     public function getCaElins()
     {
-        $elinblockids = $this->getCaElinBlockIds();
-        foreach($elinblockids as $elinblockid)
+        foreach($this->getCaElinBlockIds() as $elinblockid)
         {
             $guzzleparams = [
                 'verb'      =>  'get',
@@ -127,6 +131,23 @@ class TMS extends Model
             }
         }
         return collect($caelins);
+    }
+
+    public function getUsedCaElins()
+    {
+        $all = $this->getCaElins();
+        return $all->where('status',"!=", "available");
+    }
+
+    public function getAvailableCaElins()
+    {
+        $all = $this->getCaElins();
+        return $all->where('status', "available");
+    }
+
+    public function getAvailableCaElin()
+    {
+        return $this->getAvailableCaElins()->first();
     }
 
     public function getCaElinById($elinid)
@@ -164,18 +185,6 @@ class TMS extends Model
         $response = $this->guzzle($guzzleparams);
         return $response['result'];
     }
-
-    public function getAvailableCaElin()
-    {
-        $elins = $this->getCaElins();
-        foreach($elins as $elin)
-        {
-            if($elin['status'] == "available")
-            {
-                return $elin;                
-            }
-        }
-    }        
 
     public function modifyCaElin($elinid, $name, $status, $systemid)
     {
