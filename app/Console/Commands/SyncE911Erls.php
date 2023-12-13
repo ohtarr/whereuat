@@ -61,11 +61,12 @@ class SyncE911Erls extends Command
     public function E911ErlsToAdd()
     {
         $rooms = $this->getRooms();
-
+        $add = [];
+        
         //ADD ERLS
         foreach($rooms as $room)
         {
-            $add = [];
+
             $erl = $room->getE911Erl();
             if(!$erl)
             {

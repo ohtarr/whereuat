@@ -44,23 +44,16 @@ class SyncServiceNowLocations extends Command
      */
     public function handle()
     {
-        $this->syncAllServiceNowLocations();
+        print $this->getServiceNowLocations()->count() . "\n";
+        //$this->syncAllServiceNowLocations();
 
     }
 
     public function getServiceNowLocations()
     {
-       /*  $snowlocs = ServiceNowLocation::where('sys_id',"0520d0fddb3a3b40743afe213996194b")->get();
-        $this->snowlocs = $snowlocs;
-        return $this->snowlocs; */
-
-
-
-
         if(!$this->snowlocs)
         {
-            $snowlocs = ServiceNowLocation::where('u_network_demob_date',"")->get();
-            //$snowlocs = $snowlocs::whereNotNull('u_network_demob_date');
+            $snowlocs = ServiceNowLocation::all()->where('u_network_demob_date',"");
             $this->snowlocs = $snowlocs;
         }
         return $this->snowlocs;

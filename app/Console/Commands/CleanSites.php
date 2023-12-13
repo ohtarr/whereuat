@@ -49,7 +49,7 @@ class CleanSites extends Command
     public function SitesToRemove()
     {
         $sites = Site::all();
-        $snowlocs = ServiceNowLocation::where('u_network_demob_date',"")->get();
+        $snowlocs = ServiceNowLocation::all()->where('u_network_demob_date',"");
 
         foreach($sites as $site)
         {
