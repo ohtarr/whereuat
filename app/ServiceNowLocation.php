@@ -29,6 +29,18 @@ class ServiceNowLocation extends ServiceNowModel
 		parent::__construct($attributes);
     }
 
+    public static function all($columns = [])
+    {
+        $model = new static;
+        return $model->where('companyISNOTEMPTY')->get();
+    }
+
+    public static function allActive()
+    {
+        $model = new static;
+        return $model->where('companyISNOTEMPTY')->where('u_network_mob_dateISNOTEMPTY')->where('u_network_demob_dateISEMPTY')->get();
+    }
+
     public function getBusinessContact()
     {
         if($this->contact)
