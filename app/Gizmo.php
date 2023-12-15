@@ -67,6 +67,10 @@ class Gizmo extends Model
     //Get a single record of this model.
     public static function find($id)
     {
+        if(!$id)
+        {
+            return null;
+        }
         $body = [
             static::$key    =>  $id,
         ];
