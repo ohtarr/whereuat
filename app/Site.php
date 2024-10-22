@@ -40,7 +40,12 @@ class Site extends Model
     public function getServiceNowLocation()
     {
         if(!$this->loc && $this->loc_sys_id) {
-            $this->loc = ServiceNowLocation::find($this->loc_sys_id);
+            try{
+                $this->loc = ServiceNowLocation::find($this->loc_sys_id);
+            } catch(\Exception $e) {
+                print "Failed to fetch location!\n";
+            }
+
         }
         return $this->loc;
     }

@@ -30,7 +30,7 @@ class DeviceSwitch extends Model
         $array = json_decode($response->getBody()->getContents(), true);
         foreach($array as $item)
         {
-            if($item['mac'])
+            if(isset($item['mac']))
             {
                 $object = self::make($item);
                 $switches[] = $object;
@@ -201,7 +201,12 @@ class DeviceSwitch extends Model
         {
             return null;
         }
-        $e911erl = $this->getRoom()->getE911Erl();
+        $room = $this->getRoom();
+        if(!$room)
+        {
+            return null;
+        }
+        $e911erl = $room->getE911Erl();
         if(!$e911erl)
         {
             return null;

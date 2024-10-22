@@ -12,3 +12,4 @@ npm-debug.log
 yarn-error.log
 /etc
 after.sh
+custom_scopes.csv

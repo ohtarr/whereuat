@@ -48,6 +48,7 @@ class CleanSites extends Command
 
     public function SitesToRemove()
     {
+        $delete = [];
         $sites = Site::all();
         $snowlocs = ServiceNowLocation::all()->where('u_network_demob_date',"");
 

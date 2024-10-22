@@ -12,28 +12,28 @@ use \EmergencyGateway\EGW;
 class E911 extends Model
 {
     //primary_Key of model.
-    public static $username;
-    public static $password;
-    public static $snmp_community;
-    public static $soap_url;
-    public static $soap_wsdl;
+    //public static $username;
+    //public static $password;
+    //public static $snmp_community;
+    //public static $soap_url;
+    //public static $soap_wsdl;
     //url suffix to access ALL endpoint
-    public static $all_url = "";
+    //public static $all_url = "";
 
     protected $connection = 'e911_mysql';
 
     protected $guarded = [];
 
-    public $where = [];
+    //public $where = [];
 
-    public static function init()
+    /* public static function init()
     {
         static::$username = env('E911_SOAP_USER');
         static::$password = env('E911_SOAP_PASS');
         static::$snmp_community = env('E911_SNMP_RW');
-    }
+    } */
 
-    public static function getEgw()
+/*     public static function getEgw()
     {
         return new EGW(
             static::$soap_url,
@@ -42,6 +42,6 @@ class E911 extends Model
             static::$password,
             static::$snmp_community
         );
-    }
+    } */
 
 }

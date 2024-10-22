@@ -40,12 +40,13 @@ class CleanTeamsSubnets extends Command
     public function handle()
     {
         $teamsSubnets = new TeamsSubnet;
-        $dhcp = Dhcp::all();
+        //$dhcp = Dhcp::all();
+        $allscopes = Dhcp::getCombined();
 
         foreach($teamsSubnets->cacheAll() as $teamsSubnet)
         {
             print "Cleaning up Subnet {$teamsSubnet->subnet} {$teamsSubnet->description}...\n";
-            $scope = $dhcp->where('scopeID', $teamsSubnet->subnet)->first();
+            $scope = $allscopes->where('scopeID', $teamsSubnet->subnet)->first();
             if($scope)
             {
                print "SUBNET exists on network, skipping!\n"; 

@@ -50,6 +50,40 @@ class Dhcp extends Model
         return $this->cache;
     }
 
+    public static function getCustomScopes()
+    {
+        $filename = "custom_scopes.csv";
+        $csv = file_get_contents($filename);
+        $lines = explode(PHP_EOL, $csv);
+        $custom_subnets = [];
+        foreach ($lines as $line) {
+            $custom_subnets[] = str_getcsv($line);
+        }
+        foreach($custom_subnets as $csn)
+        {
+            unset($tmp);
+            $tmp['subnet'] = $csn[0];
+            //$tmp['netmask'] = $csn[1];
+            $tmp['sitecode'] = $csn[2];
+            $subnets[] = $tmp;
+        }
+        foreach($subnets as $subnet)
+        {
+            $scope = new Dhcp;
+            $scope->scopeID = $subnet['subnet'];
+            //$scope->subnetMask = $subnet['netmask'];
+            $scope->name = $subnet['sitecode'];
+
+            $scopes[] = $scope;
+        }
+        return new DhcpCollection($scopes);
+    }
+
+    public static function getCombined()
+    {
+        return static::all()->merge(static::getCustomScopes());
+    }
+
     public function findSite()
     {
         $sites = Site::all();
@@ -84,12 +118,24 @@ class Dhcp extends Model
     {
         print "Creating TeamsSubnet from DHCP scope {$this->scopeID}\n";
         $site = $this->findSite();
+        $room = $site->defaultBuilding->defaultRoom;
+        if(!$room)
+        {
+            print "Unable to find room!\n";
+            return null;
+        }
+        if(!$room->teams_location_id)
+        {
+            print "Unable to find Teams Location ID of room!\n";
+            return null;
+        }
         if($site)
         {
             $teamsSubnet = new TeamsSubnet;
             $teamsSubnet->subnet = $this->scopeID;
             $teamsSubnet->description = $site->name;
-            $teamsSubnet->locationId = $site->defaultBuilding->defaultRoom->teams_location_id;
+            $teamsSubnet->locationId = $room->teams_location_id;
+            print_r($teamsSubnet);
             $teamsSubnet->save();
             return $teamsSubnet;
         } else {
