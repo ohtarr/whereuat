@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\TeamsSwitch;
-use App\DeviceSwitch;
+use App\Models\TeamsSwitch;
+use App\Models\DeviceSwitch;
 
 class CleanTeamsSwitches extends Command
 {

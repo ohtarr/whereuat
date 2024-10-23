@@ -3,7 +3,7 @@
 namespace App\Collections;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Site;
+use App\Models\Site;
 
 class DhcpCollection extends Collection 
 {

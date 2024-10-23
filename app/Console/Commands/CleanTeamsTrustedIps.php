@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\TeamsTrustedIp;
-use App\PublicIp;
+use App\Models\TeamsTrustedIp;
+use App\Models\PublicIp;
 
 class CleanTeamsTrustedIps extends Command
 {

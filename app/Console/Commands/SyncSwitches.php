@@ -4,10 +4,10 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use App\DeviceSwitch;
-use App\TeamsSwitch;
-use App\TeamsLocation;
-//use App\Cache;
+use App\Models\DeviceSwitch;
+use App\Models\TeamsSwitch;
+use App\Models\TeamsLocation;
+//use App\Models\Cache;
 
 
 class SyncSwitches extends Command

@@ -4,9 +4,9 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use App\Address;
-//use App\Cache;
-use App\TeamsCivic;
+use App\Models\Address;
+//use App\Models\Cache;
+use App\Models\TeamsCivic;
 
 class SyncAddresses extends Command
 {

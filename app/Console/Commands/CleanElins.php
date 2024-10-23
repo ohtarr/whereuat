@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\TMS;
-use App\E911Erl;
+use App\Models\TMS;
+use App\Models\E911Erl;
 
 class CleanElins extends Command
 {

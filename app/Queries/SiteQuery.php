@@ -5,7 +5,7 @@ namespace App\Queries;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
-use App\Site;
+use App\Models\Site;
 
 class SiteQuery
 {

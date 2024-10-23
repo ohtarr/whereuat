@@ -3,9 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\ServiceNowLocation;
-use App\Address;
-use App\Site;
+use App\Models\ServiceNowLocation;
+use App\Models\Address;
+use App\Models\Site;
 
 class CleanSites extends Command
 {
@@ -48,7 +48,6 @@ class CleanSites extends Command
 
     public function SitesToRemove()
     {
-        $delete = [];
         $sites = Site::all();
         $snowlocs = ServiceNowLocation::all()->where('u_network_demob_date',"");
 

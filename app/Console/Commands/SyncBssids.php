@@ -4,8 +4,8 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use App\TeamsWap;
-use App\Bssid;
+use App\Models\TeamsWap;
+use App\Models\Bssid;
 
 class SyncBssids extends Command
 {

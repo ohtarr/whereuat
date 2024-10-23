@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use App\Building;
+use App\Models\Building;
 
 class SyncBuildings extends Command
 {

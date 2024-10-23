@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\TeamsSubnet;
-use App\Dhcp;
+use App\Models\TeamsSubnet;
+use App\Models\Dhcp;
 
 class CleanTeamsSubnets extends Command
 {
@@ -40,13 +40,12 @@ class CleanTeamsSubnets extends Command
     public function handle()
     {
         $teamsSubnets = new TeamsSubnet;
-        //$dhcp = Dhcp::all();
-        $allscopes = Dhcp::getCombined();
+        $dhcp = Dhcp::all();
 
         foreach($teamsSubnets->cacheAll() as $teamsSubnet)
         {
             print "Cleaning up Subnet {$teamsSubnet->subnet} {$teamsSubnet->description}...\n";
-            $scope = $allscopes->where('scopeID', $teamsSubnet->subnet)->first();
+            $scope = $dhcp->where('scopeID', $teamsSubnet->subnet)->first();
             if($scope)
             {
                print "SUBNET exists on network, skipping!\n"; 

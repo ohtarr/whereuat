@@ -3,7 +3,7 @@
 namespace App\Queries;
 
 use Illuminate\Http\Request;
-use App\Dhcp;
+use App\Models\Dhcp;
 
 class DhcpQuery
 {

@@ -3,10 +3,10 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Address;
-//use App\Cache;
-use App\TeamsCivic;
-use App\TeamsLocation;
+use App\Models\Address;
+//use App\Models\Cache;
+use App\Models\TeamsCivic;
+use App\Models\TeamsLocation;
 
 class CleanTeamsCivics extends Command
 {

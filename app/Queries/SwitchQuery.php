@@ -3,7 +3,7 @@
 namespace App\Queries;
 
 use Illuminate\Http\Request;
-use App\DeviceSwitch;
+use App\Models\DeviceSwitch;
 
 class SwitchQuery
 {

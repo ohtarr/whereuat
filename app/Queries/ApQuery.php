@@ -3,7 +3,7 @@
 namespace App\Queries;
 
 use Illuminate\Http\Request;
-use App\Ap;
+use App\Models\Ap;
 
 class ApQuery
 {
