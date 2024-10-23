@@ -3,9 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Room;
-use App\E911Erl;
-use App\TMS;
+use App\Models\Room;
+use App\Models\E911Erl;
+use App\Models\TMS;
 
 class SyncE911Erls extends Command
 {

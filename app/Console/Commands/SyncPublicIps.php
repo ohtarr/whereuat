@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\PublicIp;
-use App\TeamsTrustedIp;
+use App\Models\PublicIp;
+use App\Models\TeamsTrustedIp;
 use Illuminate\Support\Facades\Log;
 
 class SyncPublicIps extends Command

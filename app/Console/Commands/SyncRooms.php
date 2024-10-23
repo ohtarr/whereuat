@@ -3,10 +3,10 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Room;
-//use App\Cache;
-use App\TeamsCivic;
-use App\TeamsLocation;
+use App\Models\Room;
+//use App\Models\Cache;
+use App\Models\TeamsCivic;
+use App\Models\TeamsLocation;
 use Illuminate\Support\Facades\Log;
 
 class SyncRooms extends Command

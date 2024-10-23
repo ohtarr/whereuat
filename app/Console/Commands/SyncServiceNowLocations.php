@@ -3,11 +3,11 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\ServiceNowLocation;
-use App\Address;
-use App\Site;
-use App\TeamsCivic;
-use App\TeamsLocation;
+use App\Models\ServiceNowLocation;
+use App\Models\Address;
+use App\Models\Site;
+use App\Models\TeamsCivic;
+use App\Models\TeamsLocation;
 
 class SyncServiceNowLocations extends Command
 {
@@ -44,8 +44,8 @@ class SyncServiceNowLocations extends Command
      */
     public function handle()
     {
-        //print $this->getServiceNowLocations()->count() . "\n";
-        $this->syncAllServiceNowLocations();
+        print $this->getServiceNowLocations()->count() . "\n";
+        //$this->syncAllServiceNowLocations();
 
     }
 

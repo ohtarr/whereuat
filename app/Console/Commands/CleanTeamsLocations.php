@@ -3,9 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Room;
-use App\TeamsLocation;
-use App\TeamsCivic;
+use App\Models\Room;
+use App\Models\TeamsLocation;
+use App\Models\TeamsCivic;
 
 class CleanTeamsLocations extends Command
 {

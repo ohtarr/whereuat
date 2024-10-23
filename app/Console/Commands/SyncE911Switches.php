@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\DeviceSwitch;
-use App\E911Switch;
+use App\Models\DeviceSwitch;
+use App\Models\E911Switch;
 
 
 class SyncE911Switches extends Command

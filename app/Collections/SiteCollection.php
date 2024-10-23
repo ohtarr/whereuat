@@ -3,8 +3,8 @@
 namespace App\Collections;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Dhcp;
-use App\ServiceNowLocation;
+use App\Models\Dhcp;
+use App\Models\ServiceNowLocation;
 
 class SiteCollection extends Collection 
 {

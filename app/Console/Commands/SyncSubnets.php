@@ -3,12 +3,10 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Dhcp;
-use App\Site;
-use App\TeamsSubnet;
-use App\TeamsLocation;
-use GuzzleHttp\Client as GuzzleHttpClient;
-use App\Collections\DhcpCollection;
+use App\Models\Dhcp;
+use App\Models\Site;
+use App\Models\TeamsSubnet;
+use App\Models\TeamsLocation;
 
 class SyncSubnets extends Command
 {
@@ -43,16 +41,12 @@ class SyncSubnets extends Command
      */
     public function handle()
     {
-        //$dhcp = new Dhcp;
-        //$scopes = $dhcp->cacheAll();
-        //$custom_subnets = static::getCustomScopes();
+        $scopes = new Dhcp;
         $sites = Site::all();
         $teamsSubnets = new TeamsSubnet;
         $teamsLocations = new TeamsLocation;
 
-        //$allscopes = $scopes->merge($custom_subnets);
-        $allscopes = Dhcp::getCombined();
-        foreach($allscopes as $scope)
+        foreach($scopes->cacheAll() as $scope)
         {
             print 'Processing DHCP Scope with name: "' . $scope->name . '"' . "\n";
             $sitematch = 0;
@@ -98,24 +92,4 @@ class SyncSubnets extends Command
         }
 
     }
-
-    /* public static function getCustomScopes()
-    {
-        $url = env('CUSTOM_SUBNETS_URL');
-        $client = new GuzzleHttpClient();
-        $response = $client->request("GET", $url);
-        //get the body contents and decode json into an array.
-        $subnets = json_decode($response->getBody()->getContents(), true);
-        foreach($subnets as $subnet)
-        {
-            $scope = new Dhcp;
-            $scope->scopeID = $subnet['subnet'];
-            $scope->subnetMask = $subnet['netmask'];
-            $scope->name = $subnet['sitecode'];
-
-            $scopes[] = $scope;
-        }
-        return new DhcpCollection($scopes);
-    } */
-
 }

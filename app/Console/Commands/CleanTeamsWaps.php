@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\TeamsWap;
-use App\Bssid;
+use App\Models\TeamsWap;
+use App\Models\Bssid;
 
 class CleanTeamsWaps extends Command
 {

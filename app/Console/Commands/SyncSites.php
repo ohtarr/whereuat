@@ -3,10 +3,10 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Address;
-use App\Site;
-use App\Building;
-use App\Room;
+use App\Models\Address;
+use App\Models\Site;
+use App\Models\Building;
+use App\Models\Room;
 
 class SyncSites extends Command
 {
