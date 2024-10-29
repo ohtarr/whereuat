@@ -44,8 +44,7 @@ class SyncServiceNowLocations extends Command
      */
     public function handle()
     {
-        print $this->getServiceNowLocations()->count() . "\n";
-        //$this->syncAllServiceNowLocations();
+        $this->syncAllServiceNowLocations();
 
     }
 
