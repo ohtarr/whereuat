@@ -8,6 +8,7 @@ use App\Models\TeamsCivic;
 use App\Collections\AddressCollection;
 use Illuminate\Support\Facades\Log;
 use App\Models\E911Erl;
+use App\Models\Building;
 
 class Address extends Model
 {
@@ -54,7 +55,7 @@ class Address extends Model
     //RELATIONSHIP to BUILDING
     public function building()
     {
-        return $this->hasOne('App\Building');
+        return $this->hasOne(Building::class);
     }
 
     public function getStreet1Attribute()

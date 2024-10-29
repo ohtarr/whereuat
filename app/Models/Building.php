@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Room;
 use App\Models\Address;
 use App\Collections\BuildingCollection;
+use App\Models\Site;
+use App\Models\Contact;
 
 class Building extends Model
 {
@@ -20,27 +22,27 @@ class Building extends Model
 
     public function site()
     {
-        return $this->belongsTo('App\Site');
+        return $this->belongsTo(Site::class);
     }
 
     public function Address()
     {
-        return $this->belongsTo('App\Address');
+        return $this->belongsTo(Address::class);
     }
     
     public function contact()
     {
-        return $this->belongsTo('App\Contact');
+        return $this->belongsTo(Contact::class);
     }
 
     public function rooms()
     {
-        return $this->hasMany('App\Room');
+        return $this->hasMany(Room::class);
     }
 
     public function defaultRoom()
     {
-        return $this->hasOne('App\Room','id','default_room_id');
+        return $this->hasOne(Room::class,'id','default_room_id');
     }
 
     public function getAddress()
