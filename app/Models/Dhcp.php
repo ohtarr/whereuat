@@ -109,7 +109,7 @@ class Dhcp extends Model
         $teamsSubnet = new TeamsSubnet;
         $teamsSubnet->subnet = $this->scopeID;
         $teamsSubnet->description = $site->name;
-        $teamsSubnet->locationId = $defaultRoom->teams_location_id;
+        $teamsSubnet->locationId = $defaultroom->teams_location_id;
         $teamsSubnet->save();
         return $teamsSubnet;
     }
