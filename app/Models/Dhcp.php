@@ -95,7 +95,7 @@ class Dhcp extends Model
             print "No defaultbuilding found, unable to create TeamsSubnet!\n";
             return null;
         }
-        $defaultroom = $defaultbuilding->defaultRoom
+        $defaultroom = $defaultbuilding->defaultRoom;
         if(!$defaultroom)
         {
             print "No defaultroom found, unable to create TeamsSubnet!\n";
