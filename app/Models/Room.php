@@ -193,7 +193,12 @@ class Room extends Model
     //Returns a STRING.
     public function generateErlName()
     {
-        return $this->building->site->name . "_" . $this->id;        
+        $site = $this->building->site;
+        if(!$site)
+        {
+            return null;
+        }
+        return $site->name . "_" . $this->id;
     }
 
     //Generates an E911Erl formatted Address Array
