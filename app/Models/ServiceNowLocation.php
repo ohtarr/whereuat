@@ -97,6 +97,7 @@ class ServiceNowLocation extends ServiceNowModel
             print "Existing SITE with ID {$site->id} found.\n";
             if($site->name != $this->name)
             {
+                print "SITE ID {$site->id} name not correct, fixing...\n";
                 $site->name = $this->name;
                 $site->save();
             }

@@ -84,17 +84,34 @@ class Dhcp extends Model
     {
         print "Creating TeamsSubnet from DHCP scope {$this->scopeID}\n";
         $site = $this->findSite();
-        if($site)
+        if(!$site)
         {
-            $teamsSubnet = new TeamsSubnet;
-            $teamsSubnet->subnet = $this->scopeID;
-            $teamsSubnet->description = $site->name;
-            $teamsSubnet->locationId = $site->defaultBuilding->defaultRoom->teams_location_id;
-            $teamsSubnet->save();
-            return $teamsSubnet;
-        } else {
             print "No site found, unable to create TeamsSubnet!\n";
+            return null;
         }
+        $defaultbuilding = $site->defaultBuilding;
+        if(!$defaultbuilding)
+        {
+            print "No defaultbuilding found, unable to create TeamsSubnet!\n";
+            return null;
+        }
+        $defaultroom = $defaultbuilding->defaultRoom
+        if(!$defaultroom)
+        {
+            print "No defaultroom found, unable to create TeamsSubnet!\n";
+            return null;
+        }
+        if(!$defaultroom->teams_location_id)
+        {
+            print "No teams_location_id found, unable to create TeamsSubnet!\n";
+            return null;
+        }
+        $teamsSubnet = new TeamsSubnet;
+        $teamsSubnet->subnet = $this->scopeID;
+        $teamsSubnet->description = $site->name;
+        $teamsSubnet->locationId = $defaultRoom->teams_location_id;
+        $teamsSubnet->save();
+        return $teamsSubnet;
     }
 
     public function isInScope($ip)
