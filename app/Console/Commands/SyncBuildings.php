@@ -44,12 +44,21 @@ class SyncBuildings extends Command
 
     public function syncAllBuildings()
     {
-
         $msg = "********************* BEGIN " . get_class() . " *****************************\n";
         print $msg;
         Log::info($msg);
         foreach(Building::all() as $building)
         {
+            unset($site);
+            $site = $building->site;
+            if(!$site)
+            {
+                $msg = get_class() . "::" . __FUNCTION__ . " - BUILDING {$building->id} - Site ID {$building->site_id} not found, purging building...\n";
+                print $msg;
+                Log::info($msg);                
+                $building->purge();
+                continue;
+            }
             $msg = get_class() . "::" . __FUNCTION__ . " - BUILDING {$building->id} - Syncing BUILDING ID {$building->id} for SITE {$building->site->name}...\n";
             print $msg;
             Log::info($msg);
